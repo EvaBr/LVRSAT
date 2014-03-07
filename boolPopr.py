@@ -330,7 +330,7 @@ def barvanje(n, E):
     return form.poenostavi()
 
 #HADAMARD
-#Xij elementi matrike
+#Xij elementi matrike hahaha
 def hadamard(n):
     if n%2==1:
         return F()
