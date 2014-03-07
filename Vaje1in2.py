@@ -304,7 +304,6 @@ primer3 = In(Ali(Spr("p"),Spr("q")),Ali(Spr("p"),Spr("r")))
 ##
 ##########################################################################
 
-#NAŠE DELO
 #3COL
 
 def barvanje(n, E):
@@ -331,19 +330,36 @@ def barvanje(n, E):
 
 #HADAMARD
 #Xij elementi matrike
-def hadamard(n):
-    if n%2==1:
-        return F()
-    for j in range (2,n): #stolpec1
-        for i in range (1,j): #stolpec2
-            vektor = {}
-            for st in range(1,n):
-                vektor["prod{0}".format(st)] = In(Spr("X{0}{1}".format(i,st)), Spr("X{0}{1}".format(j,st))) #V vektorju maš pol skalarni prod. stolpcev i in j
-            Spr("C1,0")= Neg(vektor["prod1"])
-            Spr("C{0},{1}".format(n, n/2)) = Ali(In(Spr("C{0}{1}".format(n-1, n/2)), Neg(vektor["prod{0}".format(n)])),In(vektor["prod{0}".format(n)],Spr("C{0}{1}".format(n-1, n/2-1))))
-            if Spr("C{0}{1}".format(n,n/2))==F():
-                return F()
+##def hadamard(n):
+##    if n%2==1:
+##        return F()
+##    for j in range (2,n): #stolpec1
+##        for i in range (1,j): #stolpec2
+##            vektor = {}
+##            for st in range(1,n):
+##                vektor["prod{0}".format(st)] = In(Spr("X{0}{1}".format(i,st)), Spr("X{0}{1}".format(j,st))) #V vektorju maš pol skalarni prod. stolpcev i in j
+##            Spr("C1,0")= Neg(vektor["prod1"])
+##            Spr("C{0},{1}".format(n, n/2)) = Ali(In(Spr("C{0}{1}".format(n-1, n/2)), Neg(vektor["prod{0}".format(n)])),In(vektor["prod{0}".format(n)],Spr("C{0}{1}".format(n-1, n/2-1))))
+##            if Spr("C{0}{1}".format(n,n/2))==F():
+##                return F()
     
             
+
+#SUDOKU
+#sprejme seznam trojic zasedenih polj
+#
+#
+
+def sudoku(zasedena):
+    def sprem(k1,k2,v):
+        return Spr(str(k1)+","+str(k2)+","+str(v))
+    #vsako polje je pobarvano
+    prvidel = In(*tuple(Ali(*tuple(sprem(i, j, k) for k in range(1,10)))
+                        for i in range(1,10)
+                        for j in range(1,10)))
+    return prvidel.poenostavi()
+
+   #drugidel= In(*tuple(In(*tuple(Neg(
+
     
 
