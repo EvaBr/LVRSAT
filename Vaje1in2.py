@@ -357,9 +357,13 @@ def sudoku(zasedena):
     prvidel = In(*tuple(Ali(*tuple(sprem(i, j, k) for k in range(1,10)))
                         for i in range(1,10)
                         for j in range(1,10)))
-    return prvidel.poenostavi()
+    #return prvidel.poenostavi()
 
-   #drugidel= In(*tuple(In(*tuple(Neg(
-
-    
+    drugidel= In(*tuple(In(*tuple(Neg(In(sprem(i, j, k), sprem(i, j, l)))
+                                  for l in range(1,10)
+                                  for k in range(1,l)))
+                        for i in range(1,10)
+                        for j in range(1,10)))
+    return drugidel.poenostavi()
+##    tretjidel = 
 
