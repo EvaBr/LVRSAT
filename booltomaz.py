@@ -343,3 +343,4 @@ def hadamard(n):
             "C{0}{1}".format(n, n/2) = Ali(In("C{0}{1}".format(n-1, n/2), Neg(vektor["prod{0}".format(n)])),In(vektor["prod{0}".format(n)],"C{0}{1}".format(n-1, n/2-1)))
     
 
+#krneki
