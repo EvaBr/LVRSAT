@@ -131,15 +131,16 @@ class In():
 
     def poenostavi(self):
         if len(self.sez)==0: return T()
-        elif len(self.sez)==1: return self.sez[0]
+        elif len(self.sez)==1: return self.sez.pop().poenostavi()
         slo = {}
         for i in self.sez:
+            i=i.poenostavi()
             if type(i)==F: return F()
             elif type(i)==T: pass
             elif type(i) in slo:
-                slo[type(i)].add(i.poenostavi())
+                slo[type(i)].add(i)
             else:
-                slo[type(i)]={i.poenostavi()}
+                slo[type(i)]={i}
 
         #complementary law
         if Neg in slo:
@@ -162,6 +163,14 @@ class In():
         
         #distributivnost
 
+        if In in slo:
+            for j in slo[In]:
+                for i in j.sez:
+                    if type(i) in slo: slo[type(i)].add(i)
+                    else: slo[type(i)]={i}
+      
+            del slo[In]
+        
         mn=set()
         for i in slo.values():
             mn|=i
@@ -199,16 +208,17 @@ class Ali():
 
     def poenostavi(self):
         if len(self.sez)==0: return F()
-        elif len(self.sez)==1: return self.sez[0]
+        elif len(self.sez)==1: return self.sez.pop().poenostavi()
         slo = {}
         for i in self.sez:
+            i=i.poenostavi()
             if type(i)==T: return T()
             elif type(i)==F: pass
             elif type(i) in slo:
-                slo[type(i)].add(i.poenostavi())
+                slo[type(i)].add(i)
             else:
-                slo[type(i)]={i.poenostavi()}
-
+                slo[type(i)]={i}
+        
         #complementary law
         if Neg in slo:
             for i in slo[Neg]:
@@ -229,8 +239,15 @@ class Ali():
             slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
         
             #distributivnost
-                
-                
+
+       
+        if Ali in slo:
+            for j in slo[Ali]:
+                for i in j.sez:
+                    if type(i) in slo: slo[type(i)].add(i)
+                    else: slo[type(i)]={i}
+      
+            del slo[Ali]
 
         mn=set()
         for i in slo.values():
@@ -244,11 +261,51 @@ primer2 = In(Spr("p"),Ali(Spr("q"),Neg(Spr("p"))))
 primer3 = In(Ali(Spr("p"),Spr("q")),Ali(Spr("p"),Spr("r")))
 
 
-###########################################################################
 
+
+###################### VAJE ŠTEVILKA 2 ########################################################################
+##
+##
+##def barvanje(g,k):
+##    """Ali lahko graf podan s slovarjem g pobarvamo s k barvami? """
+##    def sprem(v,b):
+##        return Spr(str(v)+","+str(b))
+##    
+##    #vsako vozlišče vsaj ene barve
+##    f1 = In(*tuple(Ali(*tuple(sprem(v,b) for b in range(k))) for v in g))
+##
+##    #vsako vozlišče z ne več kot eno barvo
+##    f2 = In(
+##        *tuple(
+##            In(
+##                *tuple(
+##                    Neg(In(sprem(v,b1),sprem(v,b2)))
+##                    for b1 in range(k-1)
+##                    for b2 in range(b1+1,k))
+##                )
+##            for v in g))
+##    
+##    #povezani vozlišči različnih barv
+##    f3 = In(
+##        *tuple(
+##            In(
+##                *tuple(
+##                    Neg(In(sprem(v1,b),sprem(v2,b)))
+##                    for b in range(k)
+##                    )
+##                )
+##            for v1 in g for v2 in g[v1]))
+##
+##    formula = In(f1,f2,f3)
+##
+##    return formula.poenostavi()
+##
+##g = {"a":{"d"},"b":{"d"},"c":{"d"},"d":{"a","b","c"}}
+##
+##########################################################################
+
+#NAŠE DELO
 #3COL
-# vozlisca so predstavljena s stevili od 1 do n, funkcija sprejme stevilo n
-# povezave: slovar
 
 def barvanje(n, E):
     prva = T()
@@ -263,25 +320,30 @@ def barvanje(n, E):
                    Neg(In(Spr("c{0}1".format(i)),Spr("c{0}3".format(i)))),Neg(In(Spr("c{0}3".format(i)),Spr("c{0}2".format(i))))))
     druga=druga.poenostavi()
     
-##    for pov in E:
-##        tretja = In(tretja, In(Neg(In(Spr("c{0}1".format(pov[1])),Spr("c{0}1".format(pov[0]))))),
-##                  Neg(In(Spr("c{0}2".format(pov[1])),Spr("c{0}2".format(pov[0]))))),
-##        Neg(In(Spr("c{0}3".format(pov[1])),Spr("c{0}3".format(pov[0]))))
-##    tretje=tretja.poenostavi()
-##    
-##    form = In(prva,druga,tretja)
-    return druga#form#.poenostavi()
+    for pov in E:
+        tretja = In(tretja, In(Neg(In(Spr("c{0}1".format(pov[1])),Spr("c{0}1".format(pov[0])))),
+                  Neg(In(Spr("c{0}2".format(pov[1])),Spr("c{0}2".format(pov[0])))),
+        Neg(In(Spr("c{0}3".format(pov[1])),Spr("c{0}3".format(pov[0]))))))
+    tretja=tretja.poenostavi()
+    
+    form = In(prva,druga,tretja)
+    return form.poenostavi()
 
-
-
-
-
-
-
-
-
-
-
-
+#HADAMARD
+#Xij elementi matrike
+def hadamard(n):
+    if n%2==1:
+        return F()
+    for j in range (2,n): #stolpec1
+        for i in range (1,j): #stolpec2
+            vektor = {}
+            for st in range(1,n):
+                vektor["prod{0}".format(st)] = In(Spr("X{0}{1}".format(i,st)), Spr("X{0}{1}".format(j,st))) #V vektorju maš pol skalarni prod. stolpcev i in j
+            Spr("C1,0")= Neg(vektor["prod1"])
+            Spr("C{0},{1}".format(n, n/2)) = Ali(In(Spr("C{0}{1}".format(n-1, n/2)), Neg(vektor["prod{0}".format(n)])),In(vektor["prod{0}".format(n)],Spr("C{0}{1}".format(n-1, n/2-1))))
+            if Spr("C{0}{1}".format(n,n/2))==F():
+                return F()
+    
+            
     
 

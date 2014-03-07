@@ -334,13 +334,16 @@ def barvanje(n, E):
 def hadamard(n):
     if n%2==1:
         return F()
-    for j in range (2,n):
-        for i in range (1,j):
+    for j in range (2,n): #stolpec1
+        for i in range (1,j): #stolpec2
             vektor = {}
             for st in range(1,n):
-                vektor["prod{0}".format(st)] = In("X{0}{1}".format(i,st), "X{0}{1}".format(j,st))
-            "C10"
-            "C{0}{1}".format(n, n/2) = Ali(In("C{0}{1}".format(n-1, n/2), Neg(vektor["prod{0}".format(n)])),In(vektor["prod{0}".format(n)],"C{0}{1}".format(n-1, n/2-1)))
+                vektor["prod{0}".format(st)] = In(Spr("X{0}{1}".format(i,st)), Spr("X{0}{1}".format(j,st))) #V vektorju maš pol skalarni prod. stolpcev i in j
+            Spr("C1,0")= Neg(vektor["prod1"])
+            Spr("C{0},{1}".format(n, n/2)) = Ali(In(Spr("C{0}{1}".format(n-1, n/2)), Neg(vektor["prod{0}".format(n)])),In(vektor["prod{0}".format(n)],Spr("C{0}{1}".format(n-1, n/2-1))))
+            if Spr("C{0}{1}".format(n,n/2))==F():
+                return F()
+    
+            
     
 
-#blabla
