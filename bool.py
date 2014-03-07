@@ -255,7 +255,7 @@ primer3 = In(Ali(Spr("p"),Spr("q")),Ali(Spr("p"),Spr("r")))
 
 
 
-
+#jaz tu zdaj nekaj dodam
 
 
     
