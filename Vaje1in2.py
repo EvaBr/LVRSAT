@@ -306,11 +306,6 @@ class Ali():
                         elif Neg(k) in i.sez: #common id
                             menjave[i]=i.sez-{Neg(k)}
             slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
-        
-            #distributivnost
-            if Spr in slo:
-                sp=slo[Spr][1]
-                slo
                 
 
        
@@ -526,6 +521,22 @@ def sudoku(zasedena):
 #######################################################################
 # vaje 4 - pretvorba v CNF
 
+def cnf(f):
+    f1=f.poenostavi()
+    if type(f1)==In:
+        return f1
+    if type(f1)==Ali:
+        a=f1.sez
+        print (type(a))
+        for i in a:
+            if type(i)==In:
+                for j in a:
+                    if type(j)==Spr:
+           ##             vzemi ven i in j 
+                        b=i.sez
+                        a.add([nekaj, j] for nekaj in b)
+        return a
+                        
 
 #implementacija DPLL
 #def dpll(formula):
