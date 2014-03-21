@@ -365,5 +365,31 @@ def sudoku(zasedena):
                         for i in range(1,10)
                         for j in range(1,10)))
     return drugidel.poenostavi()
-##    tretjidel = 
+##    tretjidel =
+
+
+
+
+
+
+#######################################################################
+# vaje 4 - pretvorba v CNF
+
+##def cnfconvert(p):
+##    p1=p.poenostavi()
+    
+
+#implementacija DPLL
+#def dpll(formula):
+##    # formula je seznam stavkov
+##    if formula == []:
+##        return T()
+##    else:
+##        for clause in formula:
+##            if clause == []:
+##                return ()
+##            elif length(clause)==1:
+##                vrednost = clause(1)
+##                #nastavi vrednost spremenljivke
+##    
 
