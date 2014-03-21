@@ -183,7 +183,8 @@ class In():
                             menjave[i]=i.sez-{Neg(k)}
             slo[Ali]={(Ali(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[Ali]} - {None}
         
-        #distributivnost
+            
+        
 
         if In in slo:
             for j in slo[In]:
@@ -307,6 +308,10 @@ class Ali():
             slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
         
             #distributivnost
+            if Spr in slo:
+                sp=slo[Spr][1]
+                slo
+                
 
        
         if Ali in slo:
@@ -355,15 +360,16 @@ class Ali():
             slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
         
             #distributivnost
+        
 
        
-##        if Ali in slo:
-##            for j in slo[Ali]:
-##                for i in j.sez:
-##                    if type(i) in slo: slo[type(i)].add(i)
-##                    else: slo[type(i)]={i}
-##      
-##            del slo[Ali]
+        if Ali in slo:
+            for j in slo[Ali]:
+                for i in j.sez:
+                    if type(i) in slo: slo[type(i)].add(i)
+                    else: slo[type(i)]={i}
+      
+            del slo[Ali]
 
         mn=set()
         for i in slo.values():
@@ -531,13 +537,6 @@ def sudoku(zasedena):
 #######################################################################
 # vaje 4 - pretvorba v CNF
 
-def cnfconvert(p):
-    p1=p.poenostavi()
-    #najprej potisnemo negacije do atomov; to naredi poenostavi
-    #iz fomle izluscimo posamezne stavke
-    stavki=[]
-    
-    
 
 #implementacija DPLL
 #def dpll(formula):
