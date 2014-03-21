@@ -18,8 +18,7 @@ class T():
         return self
 
     def cnfconvert(self):
-        return self
-
+            return self
 ###################################################
 class F():
     def __init__(self):
@@ -40,7 +39,7 @@ class F():
     def poenostavi(self):
         return self
 
-    def cnfconvert(self):
+    def cnfconver(self):
         return self
 
 ###################################################
@@ -68,7 +67,6 @@ class Spr():
 
     def cnfconvert(self):
         return self
-
 
     
 ######################################################
@@ -107,6 +105,21 @@ class Neg():
         elif tip == Ali:
             return In(*tuple(Neg(i) for i in a.sez)).poenostavi()
 
+    def cnfconvert(self):
+        a = self.izr.cnfconvert()
+        tip = type(a)
+        if tip == T:
+            return F()
+        elif tip == F:
+            return T()
+        elif tip == Spr:
+            return Neg(a)
+        elif tip == Neg:
+            return a.izr
+        elif tip == In:
+            return Ali(*tuple(Neg(i) for i in a.sez)).cnfconvert()
+        elif tip == Ali:
+            return In(*tuple(Neg(i) for i in a.sez)).cnfconvert()
 
 
 #####################################################
@@ -185,7 +198,53 @@ class In():
             mn|=i
         return In(*tuple(mn))
     
+    def cnfconvert(self):
+        if len(self.sez)==0: return T()
+        elif len(self.sez)==1: return self.sez.pop().cnfconvert()
+        slo = {}
+        for i in self.sez:
+            i=i.cnfconvert()
+            if type(i)==F: return F()
+            elif type(i)==T: pass
+            elif type(i) in slo:
+                slo[type(i)].add(i)
+            else:
+                slo[type(i)]={i}
+
+        #complementary law
+        if Neg in slo:
+            for i in slo[Neg]:
+                for j in slo.values():
+                    if i.izr in j:
+                        return F()
+
+        #absorpcija in common identities
+        if Ali in slo:
+            menjave={}
+            for i in slo[Ali]:
+                for j in slo.values():
+                    for k in j:
+                        if k in i.sez:
+                            menjave[i]=0
+                        elif Neg(k) in i.sez:
+                            menjave[i]=i.sez-{Neg(k)}
+            slo[Ali]={(Ali(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[Ali]} - {None}
         
+        #distributivnost
+
+        if In in slo:
+            for j in slo[In]:
+                for i in j.sez:
+                    if type(i) in slo: slo[type(i)].add(i)
+                    else: slo[type(i)]={i}
+      
+            del slo[In]
+        
+        mn=set()
+        for i in slo.values():
+            mn|=i
+        return In(*tuple(mn))
+    
 ########################################################
 class Ali():
     def __init__(self,*args):
@@ -262,6 +321,54 @@ class Ali():
         for i in slo.values():
             mn|=i
         return Ali(*tuple(mn))
+
+    def cnfconvert(self):
+        if len(self.sez)==0: return F()
+        elif len(self.sez)==1: return self.sez.pop().cnfconvert()
+        slo = {}
+        for i in self.sez:
+            i=i.cnfconvert()
+            if type(i)==T: return T()
+            elif type(i)==F: pass
+            elif type(i) in slo:
+                slo[type(i)].add(i)
+            else:
+                slo[type(i)]={i}
+        
+        #complementary law
+        if Neg in slo:
+            for i in slo[Neg]:
+                for j in slo.values():
+                    if i.izr in j:
+                        return T()
+
+        #absorpcija in common identities in distributivnost
+        if In in slo:
+            menjave={}
+            for i in slo[In]:
+                for j in slo.values():
+                    for k in j:
+                        if k in i.sez: #absorpcija
+                            menjave[i]=0
+                        elif Neg(k) in i.sez: #common id
+                            menjave[i]=i.sez-{Neg(k)}
+            slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
+        
+            #distributivnost
+
+       
+##        if Ali in slo:
+##            for j in slo[Ali]:
+##                for i in j.sez:
+##                    if type(i) in slo: slo[type(i)].add(i)
+##                    else: slo[type(i)]={i}
+##      
+##            del slo[Ali]
+##
+##        mn=set()
+##        for i in slo.values():
+##            mn|=i
+##        return Ali(*tuple(mn))
 
 primer1 = Ali(Spr("p"),In(Spr("q"),Spr("p")))
 
@@ -384,9 +491,11 @@ def sudoku(zasedena):
 #######################################################################
 # vaje 4 - pretvorba v CNF
 
-##def cnfconvert(p):
-##    p1=p.poenostavi()
-##    #najprej potisnemo negacije do atomov
+def cnfconvert(p):
+    p1=p.poenostavi()
+    #najprej potisnemo negacije do atomov; to naredi poenostavi
+    #iz fomle izluscimo posamezne stavke
+    stavki=[]
     
     
 
