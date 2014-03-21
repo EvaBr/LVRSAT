@@ -469,19 +469,59 @@ def barvanje(n, E):
 def sudoku(zasedena):
     def sprem(k1,k2,v):
         return Spr(str(k1)+","+str(k2)+","+str(v))
+    
     #vsako polje je pobarvano
     prvidel = In(*tuple(Ali(*tuple(sprem(i, j, k) for k in range(1,10)))
                         for i in range(1,10)
                         for j in range(1,10)))
     #return prvidel.poenostavi()
 
+
+    #nobeno polje ni pobarvano z več kot eno barvo
     drugidel= In(*tuple(In(*tuple(Neg(In(sprem(i, j, k), sprem(i, j, l)))
                                   for l in range(1,10)
                                   for k in range(1,l)))
                         for i in range(1,10)
                         for j in range(1,10)))
-    return drugidel.poenostavi()
-##    tretjidel =
+
+
+
+    #return drugidel.poenostavi()
+
+    #barva se ne ponovi v stolpcu
+    tretjidel = In(*tuple(Neg(In(sprem(i,j,k),sprem(l,j,k)))
+                   for j in range (1,10)
+                   for k in range (1,10)
+                   for i in range (1,10)
+                   for l in range (i,10)))
+    #return tretjidel.poenostavi()
+    
+
+    #barva se ne ponovi v vrstici
+    cetrtidel = In(*tuple(Neg(In(sprem(i,j,k),sprem(i,l,k)))
+                   for i in range (1,10)
+                   for k in range (1,10)
+                   for j in range (1,10)
+                   for l in range (j,10)))
+    #return cetrtidel.poenostavi()
+
+    #barva se ne ponovi v 3x3 podkvadratu
+    #for i in range (1,10,3)
+    petidel = In(*tuple(In(*tuple(Neg(In(sprem(i,j,k),sprem(m,n,k)))
+                                   for i in range (I,I+3)
+                                   for j in range (J,J+3)
+                                   for m in range (i,I+3)
+                                   for n in range (j,J+3)
+                                   for k in range (1,10)))
+                        for I in range (1,10,3)
+                        for J in range (1,10,3)))
+    #return petidel.poenostavi()
+
+
+    #preverjanje ali je izpolnjeno zacetno stanje
+    sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
+    return sestidel.poenostavi()
+                   
 
 
 
@@ -512,4 +552,5 @@ def cnfconvert(p):
 ##                vrednost = clause(1)
 ##                #nastavi vrednost spremenljivke
 ##    
+
 
