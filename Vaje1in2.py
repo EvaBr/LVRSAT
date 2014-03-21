@@ -396,9 +396,13 @@ def sudoku(zasedena):
                                    for k in range (1,10)))
                         for I in range (1,10,3)
                         for J in range (1,10,3)))
+    #return petidel.poenostavi()
 
-    return petidel.poenostavi()
 
+    #preverjanje ali je izpolnjeno zacetno stanje
+    sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
+    return sestidel.poenostavi()
+                   
 
 
 
