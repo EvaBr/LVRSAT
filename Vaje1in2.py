@@ -17,6 +17,9 @@ class T():
     def poenostavi(self):
         return self
 
+    def cnfconvert(self):
+        return self
+
 ###################################################
 class F():
     def __init__(self):
@@ -35,6 +38,9 @@ class F():
         return False
 
     def poenostavi(self):
+        return self
+
+    def cnfconvert(self):
         return self
 
 ###################################################
@@ -58,6 +64,9 @@ class Spr():
         return slo[self.ime]
 
     def poenostavi(self):
+        return self
+
+    def cnfconvert(self):
         return self
 
 
@@ -377,6 +386,8 @@ def sudoku(zasedena):
 
 ##def cnfconvert(p):
 ##    p1=p.poenostavi()
+##    #najprej potisnemo negacije do atomov
+    
     
 
 #implementacija DPLL
