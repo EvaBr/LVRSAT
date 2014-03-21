@@ -364,11 +364,11 @@ class Ali():
 ##                    else: slo[type(i)]={i}
 ##      
 ##            del slo[Ali]
-##
-##        mn=set()
-##        for i in slo.values():
-##            mn|=i
-##        return Ali(*tuple(mn))
+
+        mn=set()
+        for i in slo.values():
+            mn|=i
+        return Ali(*tuple(mn))
 
 primer1 = Ali(Spr("p"),In(Spr("q"),Spr("p")))
 
