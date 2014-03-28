@@ -1,5 +1,8 @@
 #   testni primeri
-
 from Vaje1in2 import *
 
-primer1=Ali(Ali(Spr('x'), Spr('y')), Ali(Spr('z'), Spr('u')))
+x=Spr('x')
+y=Spr('y')
+z=Spr('z')
+u=Spr('u')
+primer1=Ali(In(x, y), In(z, u))

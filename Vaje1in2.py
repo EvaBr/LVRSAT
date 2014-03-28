@@ -498,13 +498,50 @@ def cnf(f):
     #Če je tip ali (edini različen od prej navedenih tipov) moramo formulo ustrezno popraviti
     else:
         seznam=[i for i in f1.sez]
-        for i in range(len(seznam)):
+        sezretr=[]
+        sezpom2=[]
+        for i in range(len(seznam)-1):
             if type(seznam[i])==In:
                 ##dama v novega
-                #continue
-                pass
+                sezpom=[j for j in seznam[i].sez]
+                for k in range(len(sezpom)):
+                    sezpom2.append(Ali(sezpom[k],seznam[i+1]))
+                
+                #pretvorima sezpom2 v formulo in na njej še enkrat cnf da jo dodama v sezretr
+                for k in range(len(sezpom2)):
+                    print(sezpom2[k])
+                    sezretr.append(cnf(sezpom2[k]))
+
+        sezpom2=[]
+        if len(sezretr)!=0:
+            pom=sezretr[len(sezretr)-1]
+            sezretr.pop()
+        else:
+            return seznam[len(seznam)-1]
+
+        if type(seznam[len(seznam)-1])==In:
+                sezpom=[j for j in seznam[len(seznam)-1].sez]
+                
+                for k in range(len(sezpom)):
+                    sezpom2.append(Ali(sezpom[k],pom))
+                
+                #pretvorima sezpom2 v formulo in na njej še enkrat cnf da jo dodama v sezretr
+                for k in range(len(sezpom2)):
+                    print(sezpom2[k])
+                    sezretr.append(cnf(sezpom2[k]))
+
+        return In(*tuple(sezretr[l] for l in range(len(sezretr)))).poenostavi()
+                                   
+##                return In(*tuple(cnf(sezpom2[l]) for l in range(len(sezpom2))))
+##                print(x)
+##                sezretr.append(In((l for l in sezpom2)))
+##                for k in range(len(sezpom)):
+##                    sezretr.extend([cnf(sezpom2[k])])
+
+        
+               
         #sicer je formula ok in jo vrnemo
-        return f1
+##        return In((l for l in sezretr))
 ##        
 ##        else:
 ##            a=f1.sez
@@ -532,5 +569,4 @@ def cnf(f):
 ##                vrednost = clause(1)
 ##                #nastavi vrednost spremenljivke
 ##    
-
 
