@@ -1,3 +1,5 @@
+from cnf import *
+
 class T():
     def __init__(self):
         pass
@@ -17,8 +19,15 @@ class T():
     def poenostavi(self):
         return self
 
-##    def cnfconvert(self):
-##            return self
+    def nnf(self, negiramo=False):
+        if negiramo:
+            return F()
+        else:
+            return self
+
+    def cnf(self):
+            return self
+        
 ###################################################
 class F():
     def __init__(self):
@@ -39,8 +48,14 @@ class F():
     def poenostavi(self):
         return self
 
-##    def cnfconver(self):
-##        return self
+    def nnf(self, negiramo=False):
+        if negiramo:
+            return F()
+        else:
+            return self
+
+    def cnf(self):
+            return self
 
 ###################################################
 class Spr():
@@ -64,10 +79,18 @@ class Spr():
 
     def poenostavi(self):
         return self
+    
+    def nnf(self, negiramo=False):
+        """Vrni nnf obliko objekta self."""
+        if negiramo:
+            return Neg(self)
+        else:
+            return self
 
-##    def cnfconvert(self):
-##        return self
-
+    def cnf(self):
+        """Vrni CNF obliko objekta self."""
+        return Cnf([Stavek([Lit(self.ime)])])
+    
     
 ######################################################
 class Neg():
@@ -104,28 +127,20 @@ class Neg():
             return Ali(*tuple(Neg(i) for i in a.sez)).poenostavi()
         elif tip == Ali:
             return In(*tuple(Neg(i) for i in a.sez)).poenostavi()
+        
+    def nnf(self, negiramo=False):
+        return self.izr.nnf(negiramo = not negiramo)
 
-##    def cnfconvert(self):
-##        a = self.izr.cnfconvert()
-##        tip = type(a)
-##        if tip == T:
-##            return F()
-##        elif tip == F:
-##            return T()
-##        elif tip == Spr:
-##            return Neg(a)
-##        elif tip == Neg:
-##            return a.izr
-##        elif tip == In:
-##            return Ali(*tuple(Neg(i) for i in a.sez)).cnfconvert()
-##        elif tip == Ali:
-##            return In(*tuple(Neg(i) for i in a.sez)).cnfconvert()
-##
-
-#####################################################
+    def cnf(self):
+        if isinstance(self.izr, Spr):
+            return Cnf([Stavek([Til(self.izr.ime)])])
+        else:
+            return self.nnf().cnf()
+        
+##########################################################################
 class In():
     def __init__(self,*args):
-        self.sez=set(args)
+        self.sez= args
 
     def __repr__(self):
         niz=""
@@ -200,60 +215,23 @@ class In():
             mn|=i
         return In(*tuple(mn))
 
+    def nnf(self, negiramo=False):
+        lst = [p.nnf(negiramo) for p in self.sez]
+        if negiramo:
+            return Ali(lst)
+        else:
+            return In(lst)
 
-
-   ##################### 
-##    def cnfconvert(self):
-##        if len(self.sez)==0: return T()
-##        elif len(self.sez)==1: return self.sez.pop().cnfconvert()
-##        slo = {}
-##        for i in self.sez:
-##            i=i.cnfconvert()
-##            if type(i)==F: return F()
-##            elif type(i)==T: pass
-##            elif type(i) in slo:
-##                slo[type(i)].add(i)
-##            else:
-##                slo[type(i)]={i}
-##
-##        #complementary law
-##        if Neg in slo:
-##            for i in slo[Neg]:
-##                for j in slo.values():
-##                    if i.izr in j:
-##                        return F()
-##
-##        #absorpcija in common identities
-##        if Ali in slo:
-##            menjave={}
-##            for i in slo[Ali]:
-##                for j in slo.values():
-##                    for k in j:
-##                        if k in i.sez:
-##                            menjave[i]=0
-##                        elif Neg(k) in i.sez:
-##                            menjave[i]=i.sez-{Neg(k)}
-##            slo[Ali]={(Ali(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[Ali]} - {None}
-##        
-##        #distributivnost
-##
-##        if In in slo:
-##            for j in slo[In]:
-##                for i in j.sez:
-##                    if type(i) in slo: slo[type(i)].add(i)
-##                    else: slo[type(i)]={i}
-##      
-##            del slo[In]
-##        
-##        mn=set()
-##        for i in slo.values():
-##            mn|=i
-##        return In(*tuple(mn))
-##    
-########################################################
+    def cnf(self):
+        stavki = []
+        for p in self.sez:
+            stavki.extend(p.cnf().stavki)
+        return Cnf(stavki)
+    
+##########################################################################
 class Ali():
-    def __init__(self,*args):
-        self.sez=set(args)
+    def __init__(self, *args):
+        self.sez= args
 
     def __repr__(self):
         niz=""
@@ -326,57 +304,34 @@ class Ali():
             mn|=i
         return Ali(*tuple(mn))
 
-##    def cnfconvert(self):
-##        if len(self.sez)==0: return F()
-##        elif len(self.sez)==1: return self.sez.pop().cnfconvert()
-##        slo = {}
-##        for i in self.sez:
-##            i=i.cnfconvert()
-##            if type(i)==T: return T()
-##            elif type(i)==F: pass
-##            elif type(i) in slo:
-##                slo[type(i)].add(i)
-##            else:
-##                slo[type(i)]={i}
-##        
-##        #complementary law
-##        if Neg in slo:
-##            for i in slo[Neg]:
-##                for j in slo.values():
-##                    if i.izr in j:
-##                        return T()
-##
-##        #absorpcija in common identities in distributivnost
-##        if In in slo:
-##            menjave={}
-##            for i in slo[In]:
-##                for j in slo.values():
-##                    for k in j:
-##                        if k in i.sez: #absorpcija
-##                            menjave[i]=0
-##                        elif Neg(k) in i.sez: #common id
-##                            menjave[i]=i.sez-{Neg(k)}
-##            slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
-##        
-##            #distributivnost
-##        
-##
-##       
-##        if Ali in slo:
-##            for j in slo[Ali]:
-##                for i in j.sez:
-##                    if type(i) in slo: slo[type(i)].add(i)
-##                    else: slo[type(i)]={i}
-##      
-##            del slo[Ali]
-##
-##        mn=set()
-##        for i in slo.values():
-##            mn|=i
-##        return Ali(*tuple(mn))
+    def nnf(self, negiramo=False):
+        lst = [p.nnf(negiramo) for p in self.sez]
+        if negiramo:
+            return In(lst)
+        else:
+            return Ali(lst)
+        
+    def cnf(self):
+        if len(self.sez) == 0:
+            return Cnf([Stavek([])])
+        elif len(self.sez) == 1:
+            #return (self.sez[0])[0].cnf()
+            return self.sez[0].cnf()
+        else:
+            # Razbijemo disjunkcijo na dve podformuli in izracunamo CNF
+            stavki = []
+            for s1 in self.sez[0].cnf().stavki:
+                for i in self.sez[1:]:
+                    if i==self.sez[1]:
+                        pom=i
+                    else:
+                        pom=Ali(pom,i)
+                for s2 in pom.cnf().stavki:
+                    stavki.append(Stavek(s1.literali + s2.literali))
+                    
+            return Cnf(stavki)
 
-
-
+########################################################################
 #3COL
 
 def barvanje(n, E):
@@ -470,103 +425,4 @@ def sudoku(zasedena):
     return In(prvidel,drugidel,tretjidel,cetrtidel,petidel,sestidel)       
 
 
-
-
-
-
-#######################################################################
-# vaje 4 - pretvorba v CNF
-
-def cnf(f):
-    f1=f.poenostavi()
-    #Če je tip in imamo željeno obliko
-    if type(f1)==In:
-        return f1
-    
-    #Če je tip negacija je dolžine ena in je ok
-    elif type(f1)==Neg: return f1
-    
-    #Če je tip spremenljivka je dolžine ena in je ok
-    elif type(f1)==Spr: return f1
-    
-    #Če je tip true imamo željeno obliko
-    elif type(f1)==T: return f1
-    
-    #Če je tip false imamo željeno obliko
-    elif type(f1)==F: return f1
-    
-    #Če je tip ali (edini različen od prej navedenih tipov) moramo formulo ustrezno popraviti
-    else:
-        seznam=[i for i in f1.sez]
-        sezretr=[]
-        sezpom2=[]
-        for i in range(len(seznam)-1):
-            if type(seznam[i])==In:
-                ##dama v novega
-                sezpom=[j for j in seznam[i].sez]
-                for k in range(len(sezpom)):
-                    sezpom2.append(Ali(sezpom[k],seznam[i+1]))
-                
-                #pretvorima sezpom2 v formulo in na njej še enkrat cnf da jo dodama v sezretr
-                for k in range(len(sezpom2)):
-                    print(sezpom2[k])
-                    sezretr.append(cnf(sezpom2[k]))
-
-        sezpom2=[]
-        if len(sezretr)!=0:
-            pom=sezretr[len(sezretr)-1]
-            sezretr.pop()
-        else:
-            return seznam[len(seznam)-1]
-
-        if type(seznam[len(seznam)-1])==In:
-                sezpom=[j for j in seznam[len(seznam)-1].sez]
-                
-                for k in range(len(sezpom)):
-                    sezpom2.append(Ali(sezpom[k],pom))
-                
-                #pretvorima sezpom2 v formulo in na njej še enkrat cnf da jo dodama v sezretr
-                for k in range(len(sezpom2)):
-                    print(sezpom2[k])
-                    sezretr.append(cnf(sezpom2[k]))
-
-        return In(*tuple(sezretr[l] for l in range(len(sezretr)))).poenostavi()
-                                   
-##                return In(*tuple(cnf(sezpom2[l]) for l in range(len(sezpom2))))
-##                print(x)
-##                sezretr.append(In((l for l in sezpom2)))
-##                for k in range(len(sezpom)):
-##                    sezretr.extend([cnf(sezpom2[k])])
-
-        
-               
-        #sicer je formula ok in jo vrnemo
-##        return In((l for l in sezretr))
-##        
-##        else:
-##            a=f1.sez
-##            print (type(a))
-##            for i in a:
-##                if type(i)==In:
-##                    for j in a:
-##                        if type(j)==Spr:
-##               ##             vzemi ven i in j 
-##                            b=i.sez
-##                            a.add([nekaj, j] for nekaj in b)
-##            return a
-##                        
-
-#implementacija DPLL
-#def dpll(formula):
-##    # formula je seznam stavkov
-##    if formula == []:
-##        return T()
-##    else:
-##        for clause in formula:
-##            if clause == []:
-##                return ()
-##            elif length(clause)==1:
-##                vrednost = clause(1)
-##                #nastavi vrednost spremenljivke
-##    
 
