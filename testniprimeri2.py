@@ -4,6 +4,7 @@
 #Testni primeri za preizkusanje delovanja pretvorbe v CNF
 #obliko in resevanja z DPLL.
 #
+#
 ##########################################################
 
 from Vaje1in2 import *
@@ -20,6 +21,7 @@ yy=Lit('y')
 zz=Lit('z')
 ww=Lit('w')
 
+#Prvi primer
 primer1=Ali(x,y,z)
 print('===== Primer 1 =====')
 print (primer1)
