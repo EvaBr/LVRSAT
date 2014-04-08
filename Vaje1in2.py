@@ -129,7 +129,21 @@ class Neg():
             return In(*tuple(Neg(i) for i in a.sez)).poenostavi()
         
     def nnf(self, negiramo=False):
-        return self.izr.nnf(negiramo = not negiramo)
+        a = self.izr.poenostavi()
+        tip = type(a)
+        if tip == T:
+            return F()
+        elif tip == F:
+            return T()
+        elif tip == Spr:
+            return Neg(a)
+        elif tip == Neg:
+            return a.izr
+        elif tip == In:
+            return Ali(*tuple(Neg(i) for i in a.sez))
+        elif tip == Ali:
+            return In(*tuple(Neg(i) for i in a.sez))
+        #return self.izr.nnf(negiramo = not negiramo)
 
     def cnf(self):
         if isinstance(self.izr, Spr):
