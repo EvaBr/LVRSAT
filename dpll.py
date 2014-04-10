@@ -1,7 +1,7 @@
 #implementacija DPLL
 
 #from BULL import *
-from vaja1in2 import *
+from Vaje1in2 import *
 from cnf import *
 
 
@@ -11,23 +11,38 @@ def dodaj(el, vred, slov):
 	slovarju ni, ga doda. Ce je, a ima napacno vrednost,
 	pa javi napako. """
 
-	if el in slov:
-		if slov[el]==vred:
-			pass
-		else: #if slov[el]!=vred
-			raise Exception("Not cool, dude.")
-	else: #if el not in slov
-		slov[el] = vred
-			
+	if type(el)==Neg:
+		spr = Neg(el).nnf()
+		vr = Neg(vred).nnf() #?
+		if spr in slov:
+			if slov[spr]==vr:
+				pass
+			else:
+				raise Exception("Not cool, dude.")
+		else:
+			slov[spr] = vr
+	else:
+		if el in slov:
+			if slov[el]==vred:
+				pass
+			else: #if slov[el]!=vred
+				raise Exception("Not cool, dude.")
+		else: #if el not in slov
+			slov[el] = vred
 
 
-def dpll(formula):
+
+
+def dpll(f):
 	""" Pove, ali je formuli mogoce zadostiti. Ce ji je, 
 	vrne slovar potrebnih vrednosti spremenljivk."""
-	
-	def pomozna(formula, slovar={}):
-		formula = formula.cnf()
+
+	slovarcic = {}	
+	def pomozna(formulca, slovar={}):
+		formula = formulca.cnf()
+		#newFormulca = formulca
 		if formula==[]:
+			slovarcic = slovar
 			return T()
 		else:
 			for stavek in formula.stavki:
@@ -36,33 +51,45 @@ def dpll(formula):
 				elif len(stavek.literali)==1:  #Nasli smo stavek, ki je kar literal.
 					spremenljivka = stavek.literali[0]
 					#Nastavimo ustrezno vrednost spremenljivke:
-					if type(spremenljivka)==Neg:
-						spr2 = Neg(spremenljivka).nnf()
-						try:
-							dodaj(spr2, F(), slovar)
-						except Exception:
-							return F()  #( Formula zagotovo ni izpolnjiva. )
-					else:	
-						try:
-							dodaj(spr2, T(), slovar)
-						except Exception:
-							return F()  #( Formula zagotovo ni izpolnjiva. )
-					formula = (zamenjaj(formula, spr2, slovar[spr2]).poenostavi()).cnf()  # ali samo .cnf???
+					print(spremenljivka)
+					try:
+						dodaj(spremenljivka, T(), slovar)
+					except Exception:
+						return F()  #( Formula zagotovo ni izpolnjiva. )
 
-		for s in formula.stavki:  # Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
+			#for object in slovar:
+			#	newFormulca = zamenjaj(formulca, object, slovar[object]).poenostavi()  # ali se .cnf???
+		newFormula = newFormulca.cnf()
+		nasliNovo = False
+		for s in newFormula.stavki:  # Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
 			for l in s.literali:
-				if l not in slovar:
+				if l not in slovar: #ko bo enkrat napisana f-ja zamenjaj, niti tega ne bo treba preverjat
+					nasliNovo = True
 					break
-		return (pomozna(In(formula, l), slovar) or pomozna(In(formula, Neg(l)), slovar))
+		#ko bo zamenjaj napisana, se bo ze tam pogledalo, ce je dobljeno slucajno kar F ali T, in se bo ustrezna stvar vrnila. Potem pa bo 
+		#za tu spodaj ostal le primer, ko zagotovo najdemo se eno nedef. spremenljivko, in bo sledil kar 
+		#return (pomozna(In(formula, l), slovar) or pomozna(In(formula, Neg(l)), slovar))
+		if nasliNovo:
+			return (pomozna(In(newFormulca, l), slovar) or pomozna(In(newFormulca, Neg(l)), slovar)) #ker not je treba dat v 
+												#navadni obliki, sele pol znotraj f-je se 
+													#nardi cnf oblika...
+		else:
+			#uIzi = (newFormulca.poenostavi()).cnf()
+			if newFormulca: #uIzi:
+				slovarcic = slovar
+			return newFormulca #<-ko prids do sm je newFormulca ze T() ali F(). #uIzi  
+					#na zacetku v f-ji rabis cnf obliko, da se loh lepo sprehajas po stavkih. problem pa se pojavi, ko 
+					#vstavis notr konkretne vrednosti spremenljivk, ker CNF ne zna nc nardit s T in F...
 
-	slovarcic = {}
-	rezultat = pomozna(formula, slovarcic)
+	rezultat = pomozna(f)
 	if rezultat:
-		print("Formula je izpolnljiva na naslednji način: /n")
+		print("Formula je izpolnljiva na naslednji način: ")
 		return slovarcic
 	else:
 		print("Formula ni izpolnljiva.")
 		# Je treba kaj returnat?
+
+
 
 
 
