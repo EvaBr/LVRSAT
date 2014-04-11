@@ -26,7 +26,7 @@ class T():
             return self
 
     def cnf(self):
-            return self
+            return Cnf([])
         
 ###################################################
 class F():
@@ -55,7 +55,7 @@ class F():
             return self
 
     def cnf(self):
-            return self
+            return Cnf([Stavek([])])
 
 ###################################################
 class Spr():
