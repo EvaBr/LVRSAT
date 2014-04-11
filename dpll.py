@@ -1,6 +1,5 @@
 #implementacija DPLL
 
-#from BULL import *
 from Vaje1in2 import *
 from cnf import *
 
@@ -13,7 +12,7 @@ def dodaj(el, vred, slov):
 
 	if type(el)==Neg:
 		spr = Neg(el).nnf()
-		vr = Neg(vred).nnf() #treba tle nnf?
+		vr = Neg(vred).nnf()
 		if spr in slov:
 			if slov[spr]==vr:
 				pass
@@ -92,10 +91,9 @@ def dpll(dieFormel):
 	rezultat = pomozna(dieFormel)
 	if rezultat:
 		print("Formula je izpolnljiva na naslednji način: ")
-		#return slovarcic
 	else:
 		print("Formula ni izpolnljiva.")
-	return slovarcic
+	return slovarcic #ce se ne da, pac vrne praznega, pa kaj pol.
 
 
 
