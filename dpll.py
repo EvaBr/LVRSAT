@@ -4,15 +4,15 @@ from Vaje1in2 import *
 from cnf import *
 
 
-def dodaj(el, vred, slov):
+def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Spr/Neg. vred=T ali F, slovar={Spr("x"):T(),...}
 	""" Pomozna funkcija, ki preveri, ali je dan element v 
 	slovarju in ali ima ustrezno vrednost. Ce elementa v
 	slovarju ni, ga doda. Ce je, a ima napacno vrednost,
 	pa javi napako. """
 
-	if type(el)==Neg:
-		spr = Neg(el).nnf()
-		vr = Neg(vred).nnf()
+	spr = Spr(el.ime)
+	if type(el)==Til:
+		vr = Neg(vred).poenostavi()
 		if spr in slov:
 			if slov[spr]==vr:
 				pass
@@ -20,27 +20,27 @@ def dodaj(el, vred, slov):
 				raise Exception("Not cool, dude.")
 		else:
 			slov[spr] = vr
-	else:
-		if el in slov:
-			if slov[el]==vred:
+	else: #if type = Lit
+		if spr in slov:
+			if slov[spr]==vred:
 				pass
-			else: #if slov[el]!=vred
+			else: #if slov[spr]!=vred
 				raise Exception("Not cool, dude.")
-		else: #if el not in slov
-			slov[el] = vred
+		else: #if spr not in slov
+			slov[spr] = vred
 
 
-def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):
+def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):  #Sprejme formulo v NEcnf obliki.
 	""" U Fuormuli zaminja use pojauitve Abjikta z 
 		vridnastjo tiha abjikta. """
 	
 	tip = type(Fuormula)
 	if tip==In or tip==Ali:
-		neueFormel = tip(zamenjaj(f,Abjikt, vridnastAbjikta) for f in Fuormula.sez)
+		neueFormel = tip(*tuple(zamenjaj(f,Abjikt, vridnastAbjikta) for f in Fuormula.sez))
 	elif tip==Spr and Fuormula==Abjikt:
 		neueFormel = vridnastAbjikta
 	elif tip==Neg and Fuormula.izr==Abjikt:
-		neueFormel = Neg(vridnastAbjikta).nnf()
+		neueFormel = Neg(vridnastAbjikta).poenostavi()
 	else:
 		neueFormel = Fuormula
 	return neueFormel
@@ -55,7 +55,8 @@ def dpll(dieFormel):
 	def pomozna(formulca, slovar={}):
 		formula = formulca.poenostavi().cnf()
 		if formula.stavki==[]:
-			slovarcic = slovar
+			for i in slovar:
+				slovarcic[i] = slovar[i]
 			return T()
 		else:
 			for stavek in formula.stavki:
@@ -79,17 +80,18 @@ def dpll(dieFormel):
 				nasliNovo = True
 				break
 
-		if nasliNovo:
-			return (pomozna(In(formulca, l), slovar) or pomozna(In(formulca, Neg(l)), slovar)) #ker not je treba dat v navadni obliki, sele pol znotraj f-je se nardi cnf oblika...
+		if nasliNovo: #(l najprej spravimo v class Spr, ker je trenutno Til/Lit)
+			return (pomozna(In(formulca, Spr(l.ime)), slovar) or pomozna(In(formulca, Neg(Spr(l.ime))), slovar)) #ker not je treba dat v navadni obliki, sele pol znotraj f-je se nardi cnf oblika...
 		else:
 			if formulca: #formulca je tu ze sama T(), nismo nasli nobene spremenljivke brez vrednosti...
-				slovarcic = slovar
+				for i in slovar:
+					slovarcic[i] = slovar[i]
 			return formulca #<-Ko pride do sem je formulca ze T() ali F().  
 					#OP: Na zacetku v f-ji rabis cnf obliko, da se loh lepo sprehajas po stavkih. problem pa se pojavi, ko 
 					#vstavis notri konkretne vrednosti spremenljivk, ker CNF ne zna nc nardit s T in F...(ni stavkov zato ni mozna iteracija...)
 
 	rezultat = pomozna(dieFormel)
-	if rezultat:
+	if rezultat==T():
 		print("Formula je izpolnljiva na naslednji način: ")
 	else:
 		print("Formula ni izpolnljiva.")
