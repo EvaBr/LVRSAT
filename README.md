@@ -7,4 +7,4 @@ LVRSAT
 ###### Ekipa: Teja Tement :bee:, Bojan Bauman :bear: in Eva Breznik :octopus: .
 
 
-
+![Zaenkrat kr ena random slikica...](/slikica.gif)
