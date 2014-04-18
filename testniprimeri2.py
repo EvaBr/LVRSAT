@@ -6,7 +6,7 @@
 #
 ##########################################################
 
-from Vaje1in2 import *
+from boolean import *
 from cnf import *
 from dpll import *
 
