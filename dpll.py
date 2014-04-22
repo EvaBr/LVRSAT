@@ -1,6 +1,6 @@
 #implementacija DPLL
 
-from Vaje1in2 import *
+from boolean import *
 from cnf import *
 
 
@@ -8,31 +8,32 @@ def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Sp
 	""" Pomozna funkcija, ki preveri, ali je dan element v 
 	slovarju in ali ima ustrezno vrednost. Ce elementa v
 	slovarju ni, ga doda. Ce je, a ima napacno vrednost,
-	pa javi napako. """
+	pa javi napako. Vnesen element mora biti v CNF obliki,
+	tj. tipa TIL ali LIT. """
 
 	spr = Spr(el.ime)
 	if type(el)==Til:
 		vr = Neg(vred).poenostavi()
-		if spr in slov:
+		if spr in slov
 			if slov[spr]==vr:
 				pass
 			else:
-				raise Exception("Not cool, dude.")
+				raise Eksepsn("Not cool, dude.")
 		else:
 			slov[spr] = vr
 	else: #if type = Lit
 		if spr in slov:
 			if slov[spr]==vred:
 				pass
-			else: #if slov[spr]!=vred
-				raise Exception("Not cool, dude.")
-		else: #if spr not in slov
+			else:
+				raise Eksepsn("Not cool, dude.")
+		else:
 			slov[spr] = vred
 
 
-def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):  #Sprejme formulo v NEcnf obliki.
-	""" U Fuormuli zaminja use pojauitve Abjikta z 
-		vridnastjo tiha abjikta. """
+def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):
+	""" U Fuormuli (ka nij u CNF abliki) zaminja use pojauitve 
+		Abjikta z vridnastjo tiha abjikta. """
 	
 	tip = type(Fuormula)
 	if tip==In or tip==Ali:
@@ -48,8 +49,8 @@ def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):  #Sprejme formulo v NEcnf oblik
 
 
 def dpll(dieFormel):
-	""" Pove, ali je formuli mogoce zadostiti. Ce ji je, 
-	vrne slovar potrebnih vrednosti spremenljivk."""
+	""" Sprejme formulo v navadni obliki in pove, ali ji je mogoce zadostiti. 
+		Ce ji je, vrne slovar potrebnih vrednosti spremenljivk."""
 
 	slovarcic = {}	
 	def pomozna(formulca, slovar={}):
@@ -67,7 +68,7 @@ def dpll(dieFormel):
 					#Nastavimo ustrezno vrednost spremenljivke:
 					try:
 						dodaj(spremenljivka, T(), slovar)
-					except Exception:
+					except Eksepsn, msg:
 						return F()  #( Formula zagotovo ni izpolnjiva. )
 
 			for object in slovar: #Ko smo našli vse 'literalne' stavke, v formulo vstavimo dobljene vrednosti. #### OP: bi blo boljs to sproti, v zanki update-at?
@@ -87,15 +88,13 @@ def dpll(dieFormel):
 				for i in slovar:
 					slovarcic[i] = slovar[i]
 			return formulca #<-Ko pride do sem je formulca ze T() ali F().  
-					#OP: Na zacetku v f-ji rabis cnf obliko, da se loh lepo sprehajas po stavkih. problem pa se pojavi, ko 
-					#vstavis notri konkretne vrednosti spremenljivk, ker CNF ne zna nc nardit s T in F...(ni stavkov zato ni mozna iteracija...)
 
 	rezultat = pomozna(dieFormel)
 	if rezultat==T():
 		print("Formula je izpolnljiva na naslednji način: ")
 	else:
 		print("Formula ni izpolnljiva.")
-	return slovarcic #ce se ne da, pac vrne praznega, pa kaj pol.
+	return slovarcic #Ce se ne da zadovoljit formule pac vrne praznega, pa kaj pol.
 
 
 
@@ -104,50 +103,3 @@ def dpll(dieFormel):
 #Manjka se:
 #--------------------------
 # + Se cista pojavitev.     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#            else: #ce stavek daljsi
-#                sw = 0
-#                for stavek in formula.stavki:
-#                    for spremenljivka in stavek.literali:
-#                        if (spremenljivka not in slovar):
-#                            slovar[spremenljivka]=T()
-#                            sw=1
-#                            break
-#                    if sw==1:
-#                        break
-#
-#                #če smo napolnili in je formula zadovoljena
-#                if sw==0:
-#	                return dpll(formula, slovar)
-#
-#    print('Formula je izpolnjiva na sledeč način:')
-#    return slovar
-                
-                
