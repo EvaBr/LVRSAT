@@ -98,10 +98,10 @@ class Neg():
         self.izr = izr
 
     def __repr__(self):
-        return "¬"+repr(self.izr)
+        return "¬" + repr(self.izr)
 
     def __eq__(self,other):
-        if type(other) == Neg:
+        if type(other)==Neg:
             return self.izr==other.izr
         else:
             return False
@@ -115,33 +115,33 @@ class Neg():
     def poenostavi(self):
         a = self.izr.poenostavi()
         tip = type(a)
-        if tip == T:
+        if tip==T:
             return F()
-        elif tip == F:
+        elif tip==F:
             return T()
-        elif tip == Spr:
+        elif tip==Spr:
             return Neg(a)
-        elif tip == Neg:
+        elif tip==Neg:
             return a.izr
-        elif tip == In:
+        elif tip==In:
             return Ali(*tuple(Neg(i) for i in a.sez)).poenostavi()
-        elif tip == Ali:
+        elif tip==Ali:
             return In(*tuple(Neg(i) for i in a.sez)).poenostavi()
         
     def nnf(self, negiramo=False):
         a = self.izr.poenostavi()
         tip = type(a)
-        if tip == T:
+        if tip==T:
             return F()
-        elif tip == F:
+        elif tip==F:
             return T()
-        elif tip == Spr:
+        elif tip==Spr:
             return Neg(a)
-        elif tip == Neg:
+        elif tip==Neg:
             return a.izr
-        elif tip == In:
+        elif tip==In:
             return Ali(*tuple(Neg(i) for i in a.sez))
-        elif tip == Ali:
+        elif tip==Ali:
             return In(*tuple(Neg(i) for i in a.sez))
         #return self.izr.nnf(negiramo = not negiramo)
 
@@ -159,9 +159,9 @@ class In():
     def __repr__(self):
         niz = ""
         for i in self.sez:
-            niz += " ∧ "+repr(i)
+            niz += " ∧ " + repr(i)
 
-        return "("+niz[3:]+")"
+        return "(" + niz[3:] + ")"
 
     def __eq__(self,other):
         if type(other)==In:
@@ -203,14 +203,14 @@ class In():
         #absorpcija in common identities
         #TO POENOSTAVI/SPREMENI
         if Ali in slo:
-            menjave={}
+            menjave = {}
             for i in slo[Ali]:
                 for j in slo.values():
                     for k in j:
                         if k in i.sez:
-                            menjave[i]=0
+                            menjave[i] = 0
                         elif Neg(k) in i.sez:
-                            menjave[i]=i.sez-{Neg(k)}
+                            menjave[i] = set(i.sez)-{Neg(k)}
             slo[Ali]={(Ali(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[Ali]} - {None}
         
             
@@ -220,7 +220,7 @@ class In():
             for j in slo[In]:
                 for i in j.sez:
                     if type(i) in slo: slo[type(i)].add(i)
-                    else: slo[type(i)]={i}
+                    else: slo[type(i)] = {i}
       
             del slo[In]
         
@@ -239,7 +239,8 @@ class In():
     def cnf(self):
         stavki = []
         for p in self.sez:
-            stavki.extend(p.cnf().stavki)
+            dodamo = [i for i in p.cnf().stavki if i not in stavki]
+            stavki.extend(dodamo)
         return Cnf(stavki)
     
 ##########################################################################
@@ -264,9 +265,9 @@ class Ali():
         return hash(repr(self))
 
     def vrednost(self,slo):
-        a=False
+        a = False
         for i in self.sez:
-            a= a or i.vrednost(slo)
+            a = a or i.vrednost(slo)
             if a==True:
                 return a
         return a
@@ -276,7 +277,7 @@ class Ali():
         elif len(self.sez)==1: return self.sez.pop().poenostavi()
         slo = {}
         for i in self.sez:
-            i=i.poenostavi()
+            i = i.poenostavi()
             if type(i)==T: return T()
             elif type(i)==F: pass
             elif type(i) in slo:
@@ -293,14 +294,14 @@ class Ali():
 
         #absorpcija in common identities in distributivnost
         if In in slo:
-            menjave={}
+            menjave = {}
             for i in slo[In]:
                 for j in slo.values():
                     for k in j:
                         if k in i.sez: #absorpcija
-                            menjave[i]=0
+                            menjave[i] = 0
                         elif Neg(k) in i.sez: #common id
-                            menjave[i]=i.sez-{Neg(k)}
+                            menjave[i] = set(i.sez)-{Neg(k)}
             slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
                 
 
@@ -309,11 +310,11 @@ class Ali():
             for j in slo[Ali]:
                 for i in j.sez:
                     if type(i) in slo: slo[type(i)].add(i)
-                    else: slo[type(i)]={i}
+                    else: slo[type(i)] = {i}
       
             del slo[Ali]
 
-        mn=set()
+        mn = set()
         for i in slo.values():
             mn|=i
         return Ali(*tuple(mn))
@@ -326,10 +327,9 @@ class Ali():
             return Ali(lst)
         
     def cnf(self):
-        if len(self.sez) == 0:
+        if len(self.sez)==0:
             return Cnf([Stavek([])])
-        elif len(self.sez) == 1:
-            #return (self.sez[0])[0].cnf()
+        elif len(self.sez)==1:
             return self.sez[0].cnf()
         else:
             # Razbijemo disjunkcijo na dve podformuli in izracunamo CNF
@@ -337,9 +337,9 @@ class Ali():
             for s1 in self.sez[0].cnf().stavki:
                 for i in self.sez[1:]:
                     if i==self.sez[1]:
-                        pom=i
+                        pom = i
                     else:
-                        pom=Ali(pom,i)
+                        pom = Ali(pom,i)
                 for s2 in pom.cnf().stavki:
                     stavki.append(Stavek(s1.literali + s2.literali))
                     
