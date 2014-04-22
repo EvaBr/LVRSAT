@@ -154,12 +154,12 @@ class Neg():
 ##########################################################################
 class In():
     def __init__(self,*args):
-        self.sez= args
+        self.sez = list(args)
 
     def __repr__(self):
-        niz=""
+        niz = ""
         for i in self.sez:
-            niz+=" ∧ "+repr(i)
+            niz += " ∧ "+repr(i)
 
         return "("+niz[3:]+")"
 
@@ -173,9 +173,9 @@ class In():
         return hash(repr(self))
 
     def vrednost(self,slo):
-        a=True
+        a = True
         for i in self.sez:
-            a= a and i.vrednost(slo)
+            a = a and i.vrednost(slo)
             if a==False:
                 return a
         return a
@@ -245,14 +245,14 @@ class In():
 ##########################################################################
 class Ali():
     def __init__(self, *args):
-        self.sez= args
+        self.sez = list(args)
 
     def __repr__(self):
-        niz=""
+        niz = ""
         for i in self.sez:
-            niz+=" ∨ "+repr(i)
+            niz += " ∨ " + repr(i)
 
-        return "("+niz[3:]+")"
+        return "(" + niz[3:] + ")"
 
     def __eq__(self,other):
         if type(other)==Ali:
@@ -282,7 +282,7 @@ class Ali():
             elif type(i) in slo:
                 slo[type(i)].add(i)
             else:
-                slo[type(i)]={i}
+                slo[type(i)] = {i}
         
         #complementary law
         if Neg in slo:
