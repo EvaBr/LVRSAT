@@ -1,7 +1,7 @@
 ################################################################################
 #                                   Sudoku                                     #
 #                                                                              #
-#  Funkcija sprejme seznam trojic in vrne formulo za sudoku.                   #
+#  Funkcija sprejme seznam trojic in vrne logično formulo za sudoku.           #
 #                                                                              #
 #  Primer uporabe: sudoku([(1,1,9),(1,2,2),(3,4,5)])                           #
 #                                                                              #
@@ -26,7 +26,7 @@ def sudoku(zasedena):
                         for j in range(1,10)))
     
     #nobeno polje ni pobarvano z več kot eno barvo
-    drugidel= In(*tuple(In(*tuple(Neg(In(sprem(i, j, k), sprem(i, j, l)))
+    drugidel = In(*tuple(In(*tuple(Neg(In(sprem(i, j, k), sprem(i, j, l)))
                                   for l in range(1,10)
                                   for k in range(1,l)))
                         for i in range(1,10)
@@ -45,7 +45,6 @@ def sudoku(zasedena):
                    for k in range (1,10)
                    for j in range (1,10)
                    for l in range (j,10)))
-    #return cetrtidel.poenostavi()
 
     #barva se ne ponovi v 3x3 podkvadratu
     petidel = In(*tuple(In(*tuple(Neg(In(sprem(i,j,k),sprem(m,n,k)))
@@ -61,4 +60,4 @@ def sudoku(zasedena):
     #ali je izpolnjeno zacetno stanje
     sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
 
-    return In(prvidel,drugidel,tretjidel,cetrtidel,petidel,sestidel)
+    return In(prvidel, drugidel, tretjidel, cetrtidel, petidel, sestidel)
