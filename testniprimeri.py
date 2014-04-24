@@ -9,6 +9,8 @@
 from boolean import *
 from cnf import *
 from dpll import *
+from sudoku import *
+from barvanje import *
 
 x=Spr('x')
 y=Spr('y')
