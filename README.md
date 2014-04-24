@@ -45,13 +45,14 @@ Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verja
 
 Primer uporabe: 'formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])' 
 
-Pravilnost kode se lahko preverja s pomočjo datotek *primeri* in *resljivostSudoku*. In sicer je potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja. Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej.
+Pravilnost kode se lahko preverja s pomočjo datotek *primeri* in *resljivostSudoku*. In sicer je potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku*.
+Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej. (Pa še to jih noče izpisovat. Ampak to so že malenkosti. :wink: )
 
 
-* Povezanost grafa
+* Povezanost grafa: Ahem. :toilet:
 
 
-* ...
+* ... :soon:
 
 
 ===
@@ -66,4 +67,4 @@ Naš dpll sicer dela, vendar smo si zaznačili kar nekaj izboljšav (predvsem le
 
 Kličemo ga takole: 'R = dpll(formula)', pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti spremenljivk), če je. 
 
-V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To nekako zveni bolj prijetno optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BŠS lahko.)
+V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To nekako zveni bolj prijetno optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
