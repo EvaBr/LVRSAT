@@ -366,9 +366,11 @@ def barvanje(n, E):
                   Neg(In(Spr("c{0}2".format(pov[1])),Spr("c{0}2".format(pov[0])))),
         Neg(In(Spr("c{0}3".format(pov[1])),Spr("c{0}3".format(pov[0]))))))
     tretja=tretja.poenostavi()
-    
+    print(prva)
+    print(druga)
+    print(tretja)
     form = In(prva,druga,tretja)
-    return form.poenostavi()
+    return form #.poenostavi()
 
 #HADAMARD
 #Xij elementi matrike
