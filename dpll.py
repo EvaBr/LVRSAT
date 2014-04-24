@@ -3,7 +3,7 @@
 from boolean import *
 from cnf import *
 
-
+flag = False
 def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Spr/Neg. vred=T ali F, slovar={Spr("x"):T(),...}
 	""" Pomozna funkcija, ki preveri, ali je dan element v 
 	slovarju in ali ima ustrezno vrednost. Ce elementa v
@@ -18,7 +18,7 @@ def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Sp
 			if slov[spr]==vr:
 				pass
 			else:
-				raise Exception("Not cool, dude.")
+				flag = True
 		else:
 			slov[spr] = vr
 	else: #if type = Lit
@@ -26,7 +26,7 @@ def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Sp
 			if slov[spr]==vred:
 				pass
 			else:
-				raise Exception("Not cool, dude.")
+				flag = True
 		else:
 			slov[spr] = vred
 
@@ -54,7 +54,12 @@ def NovaFormula(CNFformula, spr):
 	for st in CNFformula.stavki:
 		aliji = F()
 		for sprem in st.literali:
-			aliji = Ali(Spr(sprem.ime), aliji).poenostavi()
+			if type(sprem)==Lit:
+				spr = Spr(sprem.ime)
+			else: 
+				spr = Neg(Spr(sprem.ime))
+
+			aliji = Ali(spr, aliji).poenostavi()
 		inoti = In(inoti, aliji).poenostavi()
 	return In(inoti, spr)
 
@@ -63,65 +68,80 @@ def dpll(dieFormel):
 	""" Sprejme formulo v navadni obliki in pove, ali ji je mogoce zadostiti. 
 		Ce ji je, vrne slovar potrebnih vrednosti spremenljivk."""
 
-	slovar = {}	
+	slovar = {}
+	### Cista pojavitev:
+	pojavitve = {}
+	Formul = dieFormel.cnf()
+	for stavk in Formul.stavki:
+		for lit in stavk.literali:
+			S = Spr(lit.ime)
+			if S in pojavitve:
+				pojavitve[S].add(type(lit))
+			else:
+				pojavitve[S] = {type(lit)}
+
+	for i in pojavitve:
+		if len(pojavitve[i])==1:
+			tip = pojavitve[i].pop()
+			dodaj(tip(i.ime), T(), slovar)
+
+	for neki in slovar:
+		dieFormel = zamenjaj(dieFormel, neki, slovar[neki]).poenostavi()
+	
+	###
 	def pomozna(formulca, slovar):
 		formula = formulca.poenostavi().cnf()
-		if formula.stavki==[]:
-			#for i in slovar:
-			#	slovarcic[i] = slovar[i]
-			return (T(), slovar)
-		else:
-			for stavek in formula.stavki:
-				if stavek.literali==[]:
-					return (F(), slovar)
-				elif len(stavek.literali)==1:  #Nasli smo stavek, ki je kar literal.
-					spremenljivka = stavek.literali[0]
-					#Nastavimo ustrezno vrednost spremenljivke:
-					try:
-						dodaj(spremenljivka, T(), slovar)
-					except Exception:
-						return (F(), slovar)  #( Formula zagotovo ni izpolnjiva. )
-
-			for object in slovar: #Ko smo našli vse 'literalne' stavke, v formulo vstavimo dobljene vrednosti. #### OP: bi blo boljs to sproti, v zanki update-at?
-						#JAA! obvezno je sproti update-at, ce nimamo CNF poenostavitev zrihtanih...!
-				formulca = zamenjaj(formulca, object, slovar[object]).poenostavi() #Potrebujemo neCNF obliko nove formule...
-			formula = formulca.poenostavi().cnf() 
+		sprememba = True
+		while sprememba:			
+			if formula.stavki==[]:
+				return (T(), slovar)
+			else:
+				for stavek in formula.stavki:
+					sprememba = False
+					if stavek.literali==[]:
+						return (F(), slovar)
+					elif len(stavek.literali)==1:  #Nasli smo stavek, ki je kar literal.
+						spremenljivka = stavek.literali[0]
+						#Nastavimo ustrezno vrednost spremenljivke:
+						if not flag:
+							dodaj(spremenljivka, T(), slovar)
+							spremenljivka = Spr(spremenljivka.ime)
+							formulca = zamenjaj(formulca, spremenljivka, slovar[spremenljivka]).poenostavi()
+							formula = formulca.cnf()
+							sprememba = True
+							break
+						else: #if flag; to se ne bi smelo zgoditi spljoh.
+							print("this should not happen")
+							return (F(), slovar)
+						
+			
 		#Poglejmo, ali je ostala se kaksna spremenljivka brez vrednosti:
 		nasliNovo = False
-		for s in formula.stavki:  # Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
+		for s in formula.stavki:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
 			for l in s.literali:
 				nasliNovo = True
 				break
-
-		if nasliNovo: #(l najprej spravimo v class Spr, ker je trenutno Til/Lit)
+	
+		if nasliNovo: #l najprej spravimo v class Spr, ker je trenutno tipa Til/Lit.
 			L = Spr(l.ime)
-			###
 			blabla = pomozna(NovaFormula(formula,L),slovar)
 			if blabla[0]==T():
 				return blabla
 			else:
 				return pomozna(NovaFormula(formula,Neg(L)),slovar)
-			###
-			#return ( pomozna(NovaFormula(formula,L),slovar) or pomozna(NovaFormula(formula, Neg(L)),slovar) ) 
-			
-			#return (pomozna(In(formulca, L), slovar) or pomozna(In(formulca, Neg(L)), slovar)) #ker not je treba dat v navadni obliki, sele pol znotraj f-je se nardi cnf oblika...
 		else:
-			#if formulca: #formulca je tu ze sama T(), nismo nasli nobene spremenljivke brez vrednosti...
-			#	for i in slovar:
-			#		slovarcic[i] = slovar[i]
-			return (formulca, slovar) #formulca #<-Ko pride do sem je formulca ze T() ali F().  
+			return (formulca, slovar) #<-Ko pride do sem je formulca ze T() ali F().  
 
 	rezultat = pomozna(dieFormel, slovar)
+	
+	#Nastimamo se vse nepotrebne zadeve v slovarju:
+	for teja in pojavitve:
+		if teja not in rezultat[1]:
+			rezultat[1][teja] = T() #Smo optimisti, pa bomo vse nastimali na tru.
+
 	if rezultat[0]==T():
-		print("Formula je izpolnljiva na naslednji način: ")
-		return rezultat[1] #returnamo slovarcek.
+		print("Formula je izpolnljiva.")
+		return rezultat[1] #Returnamo slovarcek.
 	else:
 		print("Formula ni izpolnljiva.")
 		return 0
-
-
-
-###########################
-#Manjka se:
-#--------------------------
-# + Se cista pojavitev.     
