@@ -1,11 +1,11 @@
-##################################################################
-#
-#           Nekaj primerov grafov, za preizkušanje barvanj.
-#
-# Vse funkcije sprejmejo število vozlišč n in vrnejo seznam povezav, ki
-# jih ima graf želene oblike na n vozliščih.
-#
-##################################################################
+##########################################################################
+#									 #
+#           Nekaj primerov grafov za preizkušanje barvanj.		 #
+#									 #
+# Vse funkcije sprejmejo število vozlišč n in vrnejo seznam povezav, ki  #
+# jih ima graf želene oblike na n vozliščih.				 #
+#									 #
+##########################################################################
 
 from barvanje import *
 from dpll import*
@@ -64,3 +64,89 @@ grotzch.append((4,8))
 grotzch.append((4,10))
 grotzch.append((5,6))
 grotzch.append((5,9))
+
+
+
+####################################
+#Komunikacija z uporabnikom datoteke:
+#
+
+print("Hello, stranger!\n")
+print("Zaupamo ti, da bodo tvoji vnosi odgovorov skladni s pričakovanji programa. Or else... ;) \n\n")
+print("Dovoljene izbire (če ni drugače zapisano): \n   0 ... ne, hvala \n   nat k ... da, preveri k obarvljivost\n\n"")
+
+Pet = int(input("Želiš preizkusiti obarvljivost petersenovega grafa? \n"))
+Gro = int(input("Želiš preizkusiti obarvljivost grotzchevega grafa? \n"))
+
+Poln = int(input("Želiš preizkusiti obarvljivost polnega grafa? \n"))
+if Poln!=0:
+    k1 = int(input("Željeno št. vozlišč grafa: (vpiši naravno št.)\n"))
+
+Pot = int(input("Želiš preizkusiti obarvljivost poti? \n"))
+if Pot!=0:
+    k2 = int(input("Željeno št. vozlišč poti: (vpiši naravno št.)\n"))
+
+Cik = int(input("Želiš preizkusiti obarvljivost cikla? \n"))
+if Cik!=0:
+    k3 = int(input("Željeno št. vozlišč cikla: (vpiši naravno št.)\n"))
+
+cnfji = input("Izpišem tudi CNF izrazov, ki predstavljajo obarvljivosti? (y/n)\n\n")
+###########################
+if Pet!=0:
+	print(" \n{0} barvanje Petersenovega grafa".format(Pet) + "\n=================================\n")
+	if cnfji=="y":
+		izraz = kbarvanje(Pet, 10, petersen)
+		print("CNF oblika: \n", izraz.cnf())
+	mozno = dpll(izraz)
+	if mozno!=0: 
+		print("{0}-barvanje je možno!\n".format(Pet)) #A bi dodal se izpis nacina, kako?
+	else: 
+                print("{0}-barvanje ni možno!\n".format(Pet))
+
+if Gro!=0:
+        print(" \n{0} barvanje Grotzchevega grafa".format(Gro) + "\n=================================\n")
+        if cnfji=="y":
+                izraz = kbarvanje(Gro, 11, grotzch) 
+                print("CNF oblika: \n", izraz.cnf())
+        mozno = dpll(izraz)
+        if mozno!=0: 
+                print("{0}-barvanje je možno!\n".format(Gro)) #A bi dodal se izpis nacina, kako?
+        else: 
+                print("{0}-barvanje ni možno!\n".format(Gro))
+
+if Poln!=0:
+        print(" \n{0} barvanje polnega grafa".format(Poln) + "\n=================================\n")
+        if cnfji=="y":
+                izraz = kbarvanje(Poln, k1, polnigraf(k1)) 
+                print("CNF oblika: \n", izraz.cnf())
+        mozno = dpll(izraz)
+        if mozno!=0: 
+                print("{0}-barvanje je možno!\n".format(Poln)) #A bi dodal se izpis nacina, kako?
+        else: 
+                print("{0}-barvanje ni možno!\n".format(Poln))
+
+if Pot!=0:
+        print(" \n{0} barvanje poti".format(Pot) + "\n=================================\n")
+        if cnfji=="y":
+                izraz = kbarvanje(Pot, k2, pot(k2))
+                print("CNF oblika: \n", izraz.cnf())
+        mozno = dpll(izraz)
+        if mozno!=0:
+                print("{0}-barvanje je možno!\n".format(Pot)) #A bi dodal se izpis nacina, kako?
+        else:
+                print("{0}-barvanje ni možno!\n".format(Pot))
+
+if Cik!=0:
+        print(" \n{0} barvanje cikla".format(Cik) + "\n=================================\n")
+        if cnfji=="y":
+                izraz = kbarvanje(Cik, k3, cikel(k3))
+                print("CNF oblika: \n", izraz.cnf())
+        mozno = dpll(izraz)
+        if mozno!=0:
+                print("{0}-barvanje je možno!\n".format(Cik)) #A bi dodal se izpis nacina, kako?
+        else:
+                print("{0}-barvanje ni možno!\n".format(Cik))
+
+
+
+
