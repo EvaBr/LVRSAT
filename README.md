@@ -13,6 +13,7 @@
 Projekt je razdeljen na dva dela:
 
 :one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri*. 
+
 :two: Prevedba nekaj znanih problemov na SAT obliko, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, ter *resljivostSudoku*.
 
 
@@ -34,6 +35,7 @@ V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki so nepomembne oziro
 Za skeptike, ki bi želeli delovanje implementacije preveriti še na zapletenejših primerih, smo v drugem delu projekta sestavili SAT oblike nekaterih znanih problemov (npr. rešljivost sudokuja, k barvanje grafa ...), na katerih se lahko preveri tako preoblikovanje na CNF obliko kot tudi delovanje dpll-ja.
 
 Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
+
 1. boolean:
   * Novo spremenljivko (tip Spr) ustvarimo s klicem `Spr("ime spremenljivke")`.
   * Konjunkcija: Ali(x1, x2, ...), kjer so xi tipa Spr.
@@ -42,7 +44,6 @@ Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
   * True: T(), False: F().
   * Poenostavljanje formul: izraz.poenostavi()
   * Računanje CNF oblike: izraz.cnf()
-
 2. dpll:
   * Preverjanje rešljivosti SAT problema: dpll(izraz), kjer je izraz tipa Ali, In, Spr, Neg, T ali F. Klic bo, kot že rečeno, vrnil 0, če problem ni rešljiv, ter ustrezen slovar, če je.
 
@@ -64,15 +65,15 @@ Primer uporabe: `formula = barvanje(5, [(1,3), (2,3), (4,5), (2,4), (2,5)])`
 
 Povsem analogno deluje tudi funkcija **kbarvanje(K, n, E)**, ki pa ji moramo dodatno (kot prvi argument) podati še število barv K.
 
-Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V njej je zapisanih nekaj definicij grafov, na katerih se kliče glavna funkcija **kbarvanje**. Za osnovno testiranje bo torej poskrbel že sam zagon datoteke **grafi**, v kolikor želiš preveriti delovanje na kakšnem povsem drugačnem grafu, pa lahko (po importanju modulov *dpll* in *barvanje*) na njem najprej pokličeš **kbarvanje**, nato pa še **dpll** : `rezultat=dpll(kbarvanje(K,n,E))`.
+Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V njej je zapisanih nekaj definicij grafov, na katerih se kliče glavna funkcija **kbarvanje**. Za osnovno testiranje bo torej poskrbel že sam zagon datoteke **grafi**, v kolikor želiš preveriti delovanje na kakšnem povsem drugačnem grafu, pa lahko (po importanju modulov *dpll* in *barvanje*) na njem najprej pokličeš **kbarvanje**, nato pa še **dpll** : `rezultat = dpll(kbarvanje(K,n,E))`.
 
 
-* Hadamard:
+* HADAMARD:
 
 Funkciji **hadamard(n)**, ki se nahaja v istoimenski datoteki, moramo podati le velikost kvadratne matrike n, da dobimo SAT obliko zapisa problema. Za program se je javila :octopus:, tako da bo najbrž trajalo. Je cepljena proti hitrosti. Nekoč kasneje pa bo seveda dodano tudi preverjanje.
 
 
-* Sudoku:
+* SUDOKU:
 
 Problem rešljivosti sudokuja na SAT obliko prevedemo s klicem funkcije **sudoku(polja)** istoimenske datoteke. Kot argument ji podamo seznam zasedenih polj, torej tistih, čigar vrednost je že podana. Polja predstavimo s trojicami (i, j, k), kjer je i vrstica in j stolpec polja, k pa vrednost, ki se nahaja v njem.
 Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verjamemo, da nihče ni tak buhtelj, da bi se dejansko potrudil vstaviti kaj čudnega... Hvala ker se s tem strinjaš! :smiley:)
@@ -83,7 +84,7 @@ Pravilnost kode se lahko preverja s pomočjo datotek *primeri* in *resljivostSud
 Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej. (Pa še to jih noče izpisovat. Ampak to so že malenkosti. :wink: )
 
 
-* Povezanost grafa: je :toilet:.
+* POVEZANOST GRAFA: je :toilet:.
 
 * ... :soon: (or not)
 
