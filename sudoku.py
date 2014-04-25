@@ -37,14 +37,14 @@ def sudoku(zasedena):
                    for j in range (1,10)
                    for k in range (1,10)
                    for i in range (1,10)
-                   for l in range (i,10)))
+                   for l in range (i+1,10)))
     
     #barva se ne ponovi v vrstici
     cetrtidel = In(*tuple(Neg(In(sprem(i,j,k),sprem(i,l,k)))
                    for i in range (1,10)
                    for k in range (1,10)
                    for j in range (1,10)
-                   for l in range (j,10)))
+                   for l in range (j+1,10)))
 
     #barva se ne ponovi v 3x3 podkvadratu
     petidel = In(*tuple(In(*tuple(Neg(In(sprem(i,j,k),sprem(m,n,k)))
