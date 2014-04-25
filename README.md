@@ -56,7 +56,7 @@ Imena in uporaba funkcij po problemih:
 
 
 
-* 3COL:
+* 3COL/kCOL:
 
 Funkcijo **barvanje(n, E)** v datoteki *barvanje* pokličemo na številu vozlišč n in seznamu povezav (tj. seznamu dvojic) E. Seveda nam vozlišča predstavljajo števila od 1 do n, zato je potrebno tudi povezave E podati s tovrstnimi oznakami.
 Funkcija vrne logično formulo, ki ustreza SAT obliki tega problema, pri čemer nastopajoče spremenljivke 'Ci.j' predstavljajo trditev, da je vozlišče i pobarvano z barvo j.
@@ -82,6 +82,8 @@ Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
 Pravilnost kode se lahko preverja s pomočjo datotek *primeri* in *resljivostSudoku*. In sicer je potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku*.
 Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej. (Pa še to jih noče izpisovat. Ampak to so že malenkosti. :wink: )
+
+Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imajo zopet obliko trojic i,j,k, ki predstavljajo trditev, da v rešenem sudokuju na mesto v i-ti vrstici in j-tem stolpcu spada število k.
 
 
 * POVEZANOST GRAFA: je :toilet:.
