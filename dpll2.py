@@ -102,20 +102,24 @@ def dpll(dieFormel):
 			
 		#Poglejmo, ali je ostala se kaksna spremenljivka brez vrednosti:
 		nasliNovo = False
-		preostanek=formula.stavki.sort(key=lambda s: len(s))
+		preostanek = formula.stavki.sort(key = lambda s: len(s))
 		for s in preostanek:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
 			for l in s.literali:
 				nasliNovo = True
 				break
 	
 		if nasliNovo: 
-			formula.stavki.extend(Stavek([l])) #bi se dalo?
+			formula.stavki.extend(Stavek([Lit(l.ime)]))
 			blabla = pomozna(formula, slovar)
 			if blabla[0]==T():
 				return blabla
 			else:
-				#iz formule je treba stran vzet kar smo prej extendali, pa extendat z lih negiranim stavkom
-				return pomozna(formula),slovar)
+				#iz formule je treba stran vzet kar smo prej extendali, oz. menjat z lih negiranim stavkom
+				for sentence in formula.stavki:
+					sezn = sentence.literali
+					if len(sezn)==1 and sezn[0].ime==l.ime and type(sezn[0])==Lit:
+						sentence.literali[0] = Til(l.ime)		
+				return pomozna(formula, slovar)
 		else:
 			return (formulca, slovar) #<-Ko pride do sem je formulca ze T() ali F().  
 
