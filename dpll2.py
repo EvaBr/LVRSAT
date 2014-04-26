@@ -4,6 +4,7 @@ from boolean import *
 from cnf import *
 
 flag = False
+
 def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Spr/Neg. vred=T ali F, slovar={Spr("x"):T(),...}
 	""" Pomozna funkcija, ki preveri, ali je dan element v 
 	slovarju in ali ima ustrezno vrednost. Ce elementa v
@@ -32,20 +33,33 @@ def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Sp
 
 
 def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):
-	""" U Fuormuli (ka nij u CNF abliki) zaminja use pojauitve 
-		Abjikta z vridnastjo tiha abjikta. """
+	""" U Fuormuli (ka je u CNF abliki) zaminja use pojauitve 
+		Abjikta z vridnastjo tiha abjikta. (Na mistu!) 
+		Abjikt je padan kat string (sam z iminam). """
 	
-	tip = type(Fuormula)
-	if tip==In or tip==Ali:
-		neueFormel = tip(*tuple(zamenjaj(f,Abjikt, vridnastAbjikta) for f in Fuormula.sez))
-	elif tip==Spr and Fuormula==Abjikt:
-		neueFormel = vridnastAbjikta
-	elif tip==Neg and Fuormula.izr==Abjikt:
-		neueFormel = Neg(vridnastAbjikta).poenostavi()
-	else:
-		neueFormel = Fuormula
-	return neueFormel
+	stavk = 0
+	stavkov = len(Fuormula.stavki)
+	while poved < stavkov:
+		poved = Fuormula.stavki[stavk]
 
+		koliko = len(poved.literali)
+		crka = 0
+		while crka < koliko:
+			naVrsti = poved.literali[crka]
+			if naVrsti.ime == Abjikt:
+				Tip = type(naVrsti)
+				if (Tip==Til and vridnastAbjikta==T()) or (Tip==Lit and vridnastAbjikta==F()): #vstavljamo F v Ali -> lahko ga kar spustimo.
+					del (Fuormula.stavki[stavk]).literali[crka]
+					koliko -= 1
+					crka -= 1
+				else: #if (Tip==Til and vridnastAbjikta==F()) or (Tip==Lit and vridnatAbjikta==T()) #vstavljamo T v Ali -> lahko spustimo cel stavek.
+					del Fuormula.stavki[stavk]
+					stavkov -= 1
+					poved -= 1
+			crka += 1
+
+		poved += 1
+	#returnat nam ni treba nic, ker gre za spremembo formule na mestu.
 
 
 
@@ -70,8 +84,7 @@ def dpll(dieFormel):
 			dodaj(tip(i.ime), T(), slovar)
 
 	for neki in slovar:
-		pass #treba je najprej nardit, da bo zamenjaj delala na cnf...
-		#dieFormel = zamenjaj(dieFormel, neki, slovar[neki]).poenostavi()
+		zamenjaj(dieFormel, neki.ime, slovar[neki])
 	
 	###
 	def pomozna(formula, slovar):
@@ -90,13 +103,11 @@ def dpll(dieFormel):
 						#Nastavimo ustrezno vrednost spremenljivke:
 						if not flag:
 							dodaj(spremenljivka, T(), slovar)
-							spremenljivka = Spr(spremenljivka.ime)
-							#formulca = zamenjaj(formulca, spremenljivka, slovar[spremenljivka]).poenostavi()
-							#formula = formulca.cnf()
+							zamenjaj(formula, spremenljivka.ime, slovar[Spr(spremenljivka.ime)])
 							sprememba = True
 							break
 						else: #if flag; to se ne bi smelo zgoditi spljoh.
-							print("this should not happen")
+							print("So not cool, dude. This should not happen!")
 							return (F(), slovar)
 						
 			
