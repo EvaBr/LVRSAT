@@ -67,13 +67,24 @@ grotzch.append((5,9))
 
 
 
+def HumanFriendlyVersion(dplldict):
+        Ok = {}
+        for spr in dplldict:
+                if dplldict[spr]==T():
+                        [oglisce, barva] = spr.ime.split(".")
+                        [oglisce, barva] = [oglisce[1:], int(barva)]
+                        Ok["oglisce " + oglisce] = barva
+        return Ok
+
+
+
 ####################################
 #Komunikacija z uporabnikom datoteke:
 #
 
 print("Hello, stranger!\n")
 print("Zaupamo ti, da bodo tvoji vnosi odgovorov skladni s pričakovanji programa. Or else... ;) \n\n")
-print("Dovoljene izbire (če ni drugače zapisano): \n   0 ... ne, hvala \n   nat k ... da, preveri k obarvljivost\n\n"")
+print("Dovoljene izbire (če ni drugače zapisano): \n   0 ... ne, hvala \n   nat k ... da, preveri k obarvljivost\n\n")
 
 Pet = int(input("Želiš preizkusiti obarvljivost petersenovega grafa? \n"))
 Gro = int(input("Želiš preizkusiti obarvljivost grotzchevega grafa? \n"))
@@ -90,60 +101,60 @@ Cik = int(input("Želiš preizkusiti obarvljivost cikla? \n"))
 if Cik!=0:
     k3 = int(input("Željeno št. vozlišč cikla: (vpiši naravno št.)\n"))
 
-cnfji = input("Izpišem tudi CNF izrazov, ki predstavljajo obarvljivosti? (y/n)\n\n")
+cnfji = input("Izpišem tudi CNF izrazov, ki predstavljajo obarvljivosti? (y/n)\n")
 ###########################
 if Pet!=0:
 	print(" \n{0} barvanje Petersenovega grafa".format(Pet) + "\n=================================\n")
+	izraz = kbarvanje(Pet, 10, petersen)
 	if cnfji=="y":
-		izraz = kbarvanje(Pet, 10, petersen)
 		print("CNF oblika: \n", izraz.cnf())
 	mozno = dpll(izraz)
 	if mozno!=0: 
-		print("{0}-barvanje je možno!\n".format(Pet)) #A bi dodal se izpis nacina, kako?
+		print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pet), HumanFriendlyVersion(mozno)) 
 	else: 
                 print("{0}-barvanje ni možno!\n".format(Pet))
 
 if Gro!=0:
         print(" \n{0} barvanje Grotzchevega grafa".format(Gro) + "\n=================================\n")
+        izraz = kbarvanje(Gro, 11, grotzch) 
         if cnfji=="y":
-                izraz = kbarvanje(Gro, 11, grotzch) 
                 print("CNF oblika: \n", izraz.cnf())
         mozno = dpll(izraz)
         if mozno!=0: 
-                print("{0}-barvanje je možno!\n".format(Gro)) #A bi dodal se izpis nacina, kako?
+                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Gro), HumanFriendlyVersion(mozno))
         else: 
                 print("{0}-barvanje ni možno!\n".format(Gro))
 
 if Poln!=0:
         print(" \n{0} barvanje polnega grafa".format(Poln) + "\n=================================\n")
+        izraz = kbarvanje(Poln, k1, polnigraf(k1)) 
         if cnfji=="y":
-                izraz = kbarvanje(Poln, k1, polnigraf(k1)) 
                 print("CNF oblika: \n", izraz.cnf())
         mozno = dpll(izraz)
         if mozno!=0: 
-                print("{0}-barvanje je možno!\n".format(Poln)) #A bi dodal se izpis nacina, kako?
+                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Poln), HumanFriendlyVersion(mozno))
         else: 
                 print("{0}-barvanje ni možno!\n".format(Poln))
 
 if Pot!=0:
         print(" \n{0} barvanje poti".format(Pot) + "\n=================================\n")
+        izraz = kbarvanje(Pot, k2, pot(k2))
         if cnfji=="y":
-                izraz = kbarvanje(Pot, k2, pot(k2))
                 print("CNF oblika: \n", izraz.cnf())
         mozno = dpll(izraz)
         if mozno!=0:
-                print("{0}-barvanje je možno!\n".format(Pot)) #A bi dodal se izpis nacina, kako?
+                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pot), HumanFriendlyVersion(mozno))
         else:
                 print("{0}-barvanje ni možno!\n".format(Pot))
 
 if Cik!=0:
         print(" \n{0} barvanje cikla".format(Cik) + "\n=================================\n")
+        izraz = kbarvanje(Cik, k3, cikel(k3))
         if cnfji=="y":
-                izraz = kbarvanje(Cik, k3, cikel(k3))
                 print("CNF oblika: \n", izraz.cnf())
         mozno = dpll(izraz)
         if mozno!=0:
-                print("{0}-barvanje je možno!\n".format(Cik)) #A bi dodal se izpis nacina, kako?
+                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Cik), HumanFriendlyVersion(mozno))
         else:
                 print("{0}-barvanje ni možno!\n".format(Cik))
 
