@@ -132,7 +132,7 @@ def dpll(dieFormel):
 						sentence.literali[0] = Til(l.ime)		
 				return pomozna(formula, slovar)
 		else:
-			return (formula, slovar) #<-Ko pride do sem je formulca ze T() ali F().  
+			return (formula, slovar) #<-Ko pride do sem je formula ze T().cnf() ali F().cnf().  
 
 	rezultat = pomozna(dieFormel, slovar)
 	
