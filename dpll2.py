@@ -50,14 +50,13 @@ def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):
 
 
 def dpll(dieFormel):
-	""" Sprejme formulo v navadni obliki in pove, ali ji je mogoce zadostiti. 
+	""" Sprejme formulo v CNF obliki in pove, ali ji je mogoce zadostiti. 
 		Ce ji je, vrne slovar potrebnih vrednosti spremenljivk."""
 
 	slovar = {}
 	### Cista pojavitev:
 	pojavitve = {}
-	Formul = dieFormel.cnf()
-	for stavk in Formul.stavki:
+	for stavk in dieFormel.stavki:
 		for lit in stavk.literali:
 			S = Spr(lit.ime)
 			if S in pojavitve:
@@ -71,15 +70,16 @@ def dpll(dieFormel):
 			dodaj(tip(i.ime), T(), slovar)
 
 	for neki in slovar:
-		dieFormel = zamenjaj(dieFormel, neki, slovar[neki]).poenostavi()
+		pass #treba je najprej nardit, da bo zamenjaj delala na cnf...
+		#dieFormel = zamenjaj(dieFormel, neki, slovar[neki]).poenostavi()
 	
 	###
-	def pomozna(formulca, slovar):
-		formula = formulca.poenostavi().cnf()
+	def pomozna(formula, slovar):
+		#formula = cnf oblike
 		sprememba = True
 		while sprememba:			
 			if formula.stavki==[]:
-				return (T(), slovar)
+				return (T().cnf(), slovar)
 			else:
 				for stavek in formula.stavki:
 					sprememba = False
@@ -91,8 +91,8 @@ def dpll(dieFormel):
 						if not flag:
 							dodaj(spremenljivka, T(), slovar)
 							spremenljivka = Spr(spremenljivka.ime)
-							formulca = zamenjaj(formulca, spremenljivka, slovar[spremenljivka]).poenostavi()
-							formula = formulca.cnf()
+							#formulca = zamenjaj(formulca, spremenljivka, slovar[spremenljivka]).poenostavi()
+							#formula = formulca.cnf()
 							sprememba = True
 							break
 						else: #if flag; to se ne bi smelo zgoditi spljoh.
@@ -105,13 +105,13 @@ def dpll(dieFormel):
 		preostanek = formula.stavki.sort(key = lambda s: len(s))
 		for s in preostanek:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
 			for l in s.literali:
-				nasliNovo = True
+				nasliNovo = True #Ce ne bo poenostavljanja, je treba pazit se da l!=T in F?
 				break
 	
 		if nasliNovo: 
 			formula.stavki.extend(Stavek([Lit(l.ime)]))
 			blabla = pomozna(formula, slovar)
-			if blabla[0]==T():
+			if blabla[0]==T().cnf():
 				return blabla
 			else:
 				#iz formule je treba stran vzet kar smo prej extendali, oz. menjat z lih negiranim stavkom
@@ -121,7 +121,7 @@ def dpll(dieFormel):
 						sentence.literali[0] = Til(l.ime)		
 				return pomozna(formula, slovar)
 		else:
-			return (formulca, slovar) #<-Ko pride do sem je formulca ze T() ali F().  
+			return (formula, slovar) #<-Ko pride do sem je formulca ze T() ali F().  
 
 	rezultat = pomozna(dieFormel, slovar)
 	
@@ -130,7 +130,7 @@ def dpll(dieFormel):
 		if teja not in rezultat[1]:
 			rezultat[1][teja] = T() #Smo optimisti, pa bomo vse nastimali na tru.
 
-	if rezultat[0]==T():
+	if rezultat[0]==T().cnf():
 		print("Formula je izpolnljiva.")
 		return rezultat[1] #Returnamo slovarcek.
 	else:
