@@ -47,21 +47,6 @@ def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):
 	return neueFormel
 
 
-def NovaFormula(CNFformula, spr):
-	""" Vrne formulo In(CNFformula, spr) v navadni obliki. """
-	
-	inoti = T()
-	for st in CNFformula.stavki:
-		aliji = F()
-		for sprem in st.literali:
-			if type(sprem)==Lit:
-				spr = Spr(sprem.ime)
-			else: 
-				spr = Neg(Spr(sprem.ime))
-
-			aliji = Ali(spr, aliji).poenostavi()
-		inoti = In(inoti, aliji).poenostavi()
-	return In(inoti, spr)
 
 
 def dpll(dieFormel):
@@ -122,13 +107,14 @@ def dpll(dieFormel):
 				nasliNovo = True
 				break
 	
-		if nasliNovo: #l najprej spravimo v class Spr, ker je trenutno tipa Til/Lit.
-			L = Spr(l.ime)
-			blabla = pomozna(NovaFormula(formula,L),slovar)
+		if nasliNovo: 
+			formula.stavki.extend(Stavek([l])) #bi se dalo?
+			blabla = pomozna(formula, slovar)
 			if blabla[0]==T():
 				return blabla
 			else:
-				return pomozna(NovaFormula(formula,Neg(L)),slovar)
+				#iz formule je treba stran vzet kar smo prej extendali, pa extendat z lih negiranim stavkom
+				return pomozna(formula),slovar)
 		else:
 			return (formulca, slovar) #<-Ko pride do sem je formulca ze T() ali F().  
 
