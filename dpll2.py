@@ -39,9 +39,8 @@ def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):
 	
 	stavk = 0
 	stavkov = len(Fuormula.stavki)
-	while poved < stavkov:
+	while stavk < stavkov:
 		poved = Fuormula.stavki[stavk]
-
 		koliko = len(poved.literali)
 		crka = 0
 		while crka < koliko:
@@ -55,10 +54,11 @@ def zamenjaj(Fuormula, Abjikt, vridnastAbjikta):
 				else: #if (Tip==Til and vridnastAbjikta==F()) or (Tip==Lit and vridnatAbjikta==T()) #vstavljamo T v Ali -> lahko spustimo cel stavek.
 					del Fuormula.stavki[stavk]
 					stavkov -= 1
-					poved -= 1
+					stavk -= 1
+					break
 			crka += 1
 
-		poved += 1
+		stavk += 1
 	#returnat nam ni treba nic, ker gre za spremembo formule na mestu.
 
 
@@ -92,7 +92,7 @@ def dpll(dieFormel):
 		sprememba = True
 		while sprememba:			
 			if formula.stavki==[]:
-				return (T().cnf(), slovar)
+				return (T(), slovar)
 			else:
 				for stavek in formula.stavki:
 					sprememba = False
@@ -113,16 +113,16 @@ def dpll(dieFormel):
 			
 		#Poglejmo, ali je ostala se kaksna spremenljivka brez vrednosti:
 		nasliNovo = False
-		preostanek = formula.stavki.sort(key = lambda s: len(s))
-		for s in preostanek:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
+		#preostanek = formula.stavki.sort(key = lambda s: len(s))
+		for s in formula.stavki:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
 			for l in s.literali:
 				nasliNovo = True #Ce ne bo poenostavljanja, je treba pazit se da l!=T in F?
 				break
 	
 		if nasliNovo: 
-			formula.stavki.extend(Stavek([Lit(l.ime)]))
+			formula.stavki.extend([Stavek([Lit(l.ime)])])
 			blabla = pomozna(formula, slovar)
-			if blabla[0]==T().cnf():
+			if blabla[0]==T():
 				return blabla
 			else:
 				#iz formule je treba stran vzet kar smo prej extendali, oz. menjat z lih negiranim stavkom
@@ -141,9 +141,9 @@ def dpll(dieFormel):
 		if teja not in rezultat[1]:
 			rezultat[1][teja] = T() #Smo optimisti, pa bomo vse nastimali na tru.
 
-	if rezultat[0]==T().cnf():
-		print("Formula je izpolnljiva.")
+	if rezultat[0]==T():
+		#print("Formula je izpolnljiva.")
 		return rezultat[1] #Returnamo slovarcek.
 	else:
-		print("Formula ni izpolnljiva.")
+		#print("Formula ni izpolnljiva.")
 		return 0

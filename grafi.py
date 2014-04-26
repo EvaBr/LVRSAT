@@ -8,7 +8,7 @@
 ##########################################################################
 
 from barvanje import *
-from dpll import*
+from dpll2 import*
 from boolean import *
 from cnf import *
 
@@ -68,13 +68,13 @@ grotzch.append((5,9))
 
 
 def HumanFriendlyVersion(dplldict):
-        Ok = {}
-        for spr in dplldict:
-                if dplldict[spr]==T():
-                        [oglisce, barva] = spr.ime.split(".")
-                        [oglisce, barva] = [oglisce[1:], int(barva)]
-                        Ok["oglisce " + oglisce] = barva
-        return Ok
+    Ok = {}
+    for spr in dplldict:
+        if dplldict[spr]==T():
+            [oglisce, barva] = spr.ime.split(".")
+            [oglisce, barva] = [oglisce[1:], int(barva)]
+            Ok["oglisce " + oglisce] = barva
+    return Ok
 
 
 
@@ -104,58 +104,64 @@ if Cik!=0:
 cnfji = input("Izpišem tudi CNF izrazov, ki predstavljajo obarvljivosti? (y/n)\n")
 ###########################
 if Pet!=0:
-	print(" \n{0} barvanje Petersenovega grafa".format(Pet) + "\n=================================\n")
-	izraz = kbarvanje(Pet, 10, petersen)
-	if cnfji=="y":
-		print("CNF oblika: \n", izraz.cnf())
-	mozno = dpll(izraz)
-	if mozno!=0: 
-		print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pet), HumanFriendlyVersion(mozno)) 
-	else: print("{0}-barvanje ni možno!\n".format(Pet))
+    print(" \n{0} barvanje Petersenovega grafa".format(Pet) + "\n=================================\n")
+    izraz = kbarvanje(Pet, 10, petersen)
+    CNF = izraz.cnf()
+    if cnfji=="y":
+        print("CNF oblika: \n", CNF)
+    mozno = dpll(CNF) #izraz)
+    if mozno!=0: 
+        print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pet), HumanFriendlyVersion(mozno)) 
+    else: 
+        print("{0}-barvanje ni možno!\n".format(Pet))
 
 if Gro!=0:
-        print(" \n{0} barvanje Grotzchevega grafa".format(Gro) + "\n=================================\n")
-        izraz = kbarvanje(Gro, 11, grotzch) 
-        if cnfji=="y":
-                print("CNF oblika: \n", izraz.cnf())
-        mozno = dpll(izraz)
-        if mozno!=0: 
-                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Gro), HumanFriendlyVersion(mozno))
-        else: 
-                print("{0}-barvanje ni možno!\n".format(Gro))
+    print(" \n{0} barvanje Grotzchevega grafa".format(Gro) + "\n=================================\n")
+    izraz = kbarvanje(Gro, 11, grotzch) 
+    CNF = izraz.cnf()
+    if cnfji=="y":
+        print("CNF oblika: \n", CNF)
+    mozno = dpll(CNF) #izraz)
+    if mozno!=0: 
+        print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Gro), HumanFriendlyVersion(mozno))
+    else: 
+        print("{0}-barvanje ni možno!\n".format(Gro))
 
 if Poln!=0:
-        print(" \n{0} barvanje polnega grafa".format(Poln) + "\n=================================\n")
-        izraz = kbarvanje(Poln, k1, polnigraf(k1)) 
-        if cnfji=="y":
-                print("CNF oblika: \n", izraz.cnf())
-        mozno = dpll(izraz)
-        if mozno!=0: 
-                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Poln), HumanFriendlyVersion(mozno))
-        else: 
-                print("{0}-barvanje ni možno!\n".format(Poln))
+    print(" \n{0} barvanje polnega grafa".format(Poln) + "\n=================================\n")
+    izraz = kbarvanje(Poln, k1, polnigraf(k1)) 
+    CNF = izraz.cnf()
+    if cnfji=="y":
+        print("CNF oblika: \n", CNF)
+    mozno = dpll(CNF) #izraz)
+    if mozno!=0: 
+        print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Poln), HumanFriendlyVersion(mozno))
+    else: 
+        print("{0}-barvanje ni možno!\n".format(Poln))
 
 if Pot!=0:
-        print(" \n{0} barvanje poti".format(Pot) + "\n=================================\n")
-        izraz = kbarvanje(Pot, k2, pot(k2))
-        if cnfji=="y":
-                print("CNF oblika: \n", izraz.cnf())
-        mozno = dpll(izraz)
-        if mozno!=0:
-                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pot), HumanFriendlyVersion(mozno))
-        else:
-                print("{0}-barvanje ni možno!\n".format(Pot))
+    print(" \n{0} barvanje poti".format(Pot) + "\n=================================\n")
+    izraz = kbarvanje(Pot, k2, pot(k2))
+    CNF = izraz.cnf()
+    if cnfji=="y":
+        print("CNF oblika: \n", CNF)
+    mozno = dpll(CNF) #izraz)
+    if mozno!=0:
+        print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pot), HumanFriendlyVersion(mozno))
+    else:
+        print("{0}-barvanje ni možno!\n".format(Pot))
 
 if Cik!=0:
-        print(" \n{0} barvanje cikla".format(Cik) + "\n=================================\n")
-        izraz = kbarvanje(Cik, k3, cikel(k3))
-        if cnfji=="y":
-                print("CNF oblika: \n", izraz.cnf())
-        mozno = dpll(izraz)
-        if mozno!=0:
-                print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Cik), HumanFriendlyVersion(mozno))
-        else:
-                print("{0}-barvanje ni možno!\n".format(Cik))
+    print(" \n{0} barvanje cikla".format(Cik) + "\n=================================\n")
+    izraz = kbarvanje(Cik, k3, cikel(k3))
+    CNF = izraz.cnf()
+    if cnfji=="y":
+        print("CNF oblika: \n", CNF)
+    mozno = dpll(CNF) #izraz)
+    if mozno!=0:
+        print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Cik), HumanFriendlyVersion(mozno))
+    else:
+        print("{0}-barvanje ni možno!\n".format(Cik))
 
 
 
