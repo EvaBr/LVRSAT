@@ -111,8 +111,7 @@ if Pet!=0:
 	mozno = dpll(izraz)
 	if mozno!=0: 
 		print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pet), HumanFriendlyVersion(mozno)) 
-	else: 
-                print("{0}-barvanje ni možno!\n".format(Pet))
+	else: print("{0}-barvanje ni možno!\n".format(Pet))
 
 if Gro!=0:
         print(" \n{0} barvanje Grotzchevega grafa".format(Gro) + "\n=================================\n")
