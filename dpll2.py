@@ -102,7 +102,8 @@ def dpll(dieFormel):
 			
 		#Poglejmo, ali je ostala se kaksna spremenljivka brez vrednosti:
 		nasliNovo = False
-		for s in formula.stavki:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
+		preostanek=formula.stavki.sort(key=lambda s: len(s))
+		for s in preostanek:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
 			for l in s.literali:
 				nasliNovo = True
 				break
