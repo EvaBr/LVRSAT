@@ -8,7 +8,7 @@
 ##########################################################################
 
 from barvanje import *
-from dpll2 import*
+from dpll import*
 from boolean import *
 from cnf import *
 

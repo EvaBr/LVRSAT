@@ -10,7 +10,7 @@
 
 from boolean import *
 from cnf import *
-from dpll2 import *
+from dpll import *
 
 x=Spr('x')
 y=Spr('y')

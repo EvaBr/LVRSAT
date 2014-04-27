@@ -16,7 +16,6 @@
 
 from boolean import *
 from cnf import *
-from dpll2 import *
 
 
 def sudoku(zasedena):
@@ -64,6 +63,5 @@ def sudoku(zasedena):
     if zasedena != []:
         sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
     else: sestidel = T()
-    print(sestidel)
 
     return In(prvidel, drugidel, tretjidel, cetrtidel, petidel, sestidel)
