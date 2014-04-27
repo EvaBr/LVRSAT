@@ -12,7 +12,7 @@
 
 Projekt je razdeljen na dva dela:
 
-:one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll*, *dpll2* in *testniprimeri*. 
+:one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri*. 
 
 :two: Prevedba nekaj znanih problemov na SAT obliko, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, ter *resljivostSudoku*.
 
@@ -20,10 +20,9 @@ Projekt je razdeljen na dva dela:
 ===
 ##### SAT solver
 V datoteki *boolean* se nahajajo definicije logičnih objektov, ki jih potrebujemo v vseh ostalih programih (In, Ali, Spr za spremenljivko, Neg za negacijo...). Datoteka *Cnf*  pravtako vsebuje podobne definicije objektov, ki pa jih potrebujemo predvsem pri pretvorbi logičnih formul v CNF obliko.
-V *dpll2* je, kot pove že ime, napisana naša luštkana implementacija dpll algoritma (t.j. algoritma, ki za dano SAT formulo pove, ali ji je možno zadostiti, in če ja, kako). Seveda vsebuje tudi kar nekaj pomožnih funkcij, katerih naloga pa je zapisana v njihovem opisu. V *dpll* je napisana trotlziher verzija resevanja SAT problemov, ki deluje, a vseskozi uporablja tako navadno kot cnf obliko formule, zaradi česar je zelo počasna in ne spominja kaj dosti na dpll. Kot argument sprejme navadno obliko formule. 
-Pri dpll2 pa gre za precej spremenjeno začetno kodo, tako da uporablja zgolj cnf obliko. Pravtako ni poenostavljanj formul navadne oblike, kar proces še pohitri. Ta (dpll2) sprejme formulo v cnf obliki. 
+V *dpll* je, kot pove že ime, napisana naša luštkana implementacija dpll algoritma (t.j. algoritma, ki za dano SAT formulo pove, ali ji je možno zadostiti, in če ja, kako). Seveda vsebuje tudi kar nekaj pomožnih funkcij, katerih naloga pa je zapisana v njihovem opisu. Glavna funkcija dpll, ki izvede algoritem, sprejme formulo v cnf obliki. 
 
-Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte). Preverja seveda dpll2 verzijo. Preverjanje počasnejše zadeve (dpll) odsvetujemo.
+Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte).
 
 
 V algoritem je dodano tudi preverjanje čiste pojavitve, vendar se le-to zaenkrat izvede le na začetku, takoj ob klicu dpll-ja. Zato nameravamo kodo še preoblikovati, da se bo preverjala večkrat, saj utegne v nekaterih primerih prihraniti veliko časa.
@@ -72,7 +71,7 @@ Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V nj
 
 * HADAMARD:
 
-Funkciji **hadamard(n)**, ki se nahaja v istoimenski datoteki, moramo podati le velikost kvadratne matrike n, da dobimo SAT obliko zapisa problema. Za program se je javila :octopus:, tako da bo najbrž trajalo. Je cepljena proti hitrosti. Nekoč kasneje pa bo seveda dodano tudi preverjanje.
+Funkciji **hadamard(n)**, ki se (oziroma se bo nekoč) nahaja v istoimenski datoteki, moramo podati le velikost kvadratne matrike n, da dobimo SAT obliko zapisa problema. Za program se je javila :octopus:, tako da bo najbrž trajalo. Je cepljena proti hitrosti. Nekoč kasneje pa bo seveda dodano tudi preverjanje.
 
 
 * SUDOKU:
@@ -83,7 +82,7 @@ Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verja
 Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
 Pravilnost kode se lahko preverja s pomočjo datotek *primeri* in *resljivostSudoku*. In sicer je potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku*.
-Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej. (Pa še to jih noče izpisovat. Ampak to so že malenkosti. :wink: )
+Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev human readable obliki.  
 
 Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imajo zopet obliko trojic i,j,k, ki predstavljajo trditev, da v rešenem sudokuju na mesto v i-ti vrstici in j-tem stolpcu spada število k.
 
