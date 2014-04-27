@@ -109,7 +109,7 @@ if Pet!=0:
     CNF = izraz.cnf()
     if cnfji=="y":
         print("CNF oblika: \n", CNF)
-    mozno = dpll(CNF) #izraz)
+    mozno = dpll(CNF)
     if mozno!=0: 
         print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pet), HumanFriendlyVersion(mozno)) 
     else: 
@@ -121,7 +121,7 @@ if Gro!=0:
     CNF = izraz.cnf()
     if cnfji=="y":
         print("CNF oblika: \n", CNF)
-    mozno = dpll(CNF) #izraz)
+    mozno = dpll(CNF)
     if mozno!=0: 
         print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Gro), HumanFriendlyVersion(mozno))
     else: 
@@ -133,7 +133,7 @@ if Poln!=0:
     CNF = izraz.cnf()
     if cnfji=="y":
         print("CNF oblika: \n", CNF)
-    mozno = dpll(CNF) #izraz)
+    mozno = dpll(CNF)
     if mozno!=0: 
         print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Poln), HumanFriendlyVersion(mozno))
     else: 
@@ -145,7 +145,7 @@ if Pot!=0:
     CNF = izraz.cnf()
     if cnfji=="y":
         print("CNF oblika: \n", CNF)
-    mozno = dpll(CNF) #izraz)
+    mozno = dpll(CNF)
     if mozno!=0:
         print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Pot), HumanFriendlyVersion(mozno))
     else:
@@ -157,7 +157,7 @@ if Cik!=0:
     CNF = izraz.cnf()
     if cnfji=="y":
         print("CNF oblika: \n", CNF)
-    mozno = dpll(CNF) #izraz)
+    mozno = dpll(CNF)
     if mozno!=0:
         print("{0}-barvanje je možno, med drugim na naslednji način: \n".format(Cik), HumanFriendlyVersion(mozno))
     else:

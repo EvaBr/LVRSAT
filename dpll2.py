@@ -3,7 +3,6 @@
 from boolean import *
 from cnf import *
 
-flag = False
 
 def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Spr/Neg. vred=T ali F, slovar={Spr("x"):T(),...}
 	""" Pomozna funkcija, ki preveri, ali je dan element v 
@@ -18,16 +17,12 @@ def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Sp
 		if spr in slov:
 			if slov[spr]==vr:
 				pass
-			else:
-				flag = True
 		else:
 			slov[spr] = vr
 	else: #if type = Lit
 		if spr in slov:
 			if slov[spr]==vred:
 				pass
-			else:
-				flag = True
 		else:
 			slov[spr] = vred
 
@@ -101,22 +96,16 @@ def dpll(dieFormel):
 					elif len(stavek.literali)==1:  #Nasli smo stavek, ki je kar literal.
 						spremenljivka = stavek.literali[0]
 						#Nastavimo ustrezno vrednost spremenljivke:
-						if not flag:
-							dodaj(spremenljivka, T(), slovar)
-							zamenjaj(formula, spremenljivka.ime, slovar[Spr(spremenljivka.ime)])
-							sprememba = True
-							break
-						else: #if flag; to se ne bi smelo zgoditi spljoh.
-							print("So not cool, dude. This should not happen!")
-							return (F(), slovar)
-						
+						dodaj(spremenljivka, T(), slovar)
+						zamenjaj(formula, spremenljivka.ime, slovar[Spr(spremenljivka.ime)])
+						sprememba = True
+						break
 			
 		#Poglejmo, ali je ostala se kaksna spremenljivka brez vrednosti:
 		nasliNovo = False
-		#preostanek = formula.stavki.sort(key = lambda s: len(s))
 		for s in formula.stavki:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
 			for l in s.literali:
-				nasliNovo = True #Ce ne bo poenostavljanja, je treba pazit se da l!=T in F?
+				nasliNovo = True
 				break
 	
 		if nasliNovo: 
