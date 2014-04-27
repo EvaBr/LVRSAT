@@ -15,6 +15,9 @@
 ################################################################################
 
 from boolean import *
+from cnf import *
+from dpll2 import *
+
 
 def sudoku(zasedena):
     def sprem(k1,k2,v):
@@ -58,6 +61,9 @@ def sudoku(zasedena):
                         for J in range (1,10,3)))
     
     #ali je izpolnjeno zacetno stanje
-    sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
+    if zasedena != []:
+        sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
+    else: sestidel = T()
+    print(sestidel)
 
     return In(prvidel, drugidel, tretjidel, cetrtidel, petidel, sestidel)

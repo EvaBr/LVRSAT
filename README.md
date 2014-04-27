@@ -12,7 +12,7 @@
 
 Projekt je razdeljen na dva dela:
 
-:one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri*. 
+:one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll*, *dpll2* in *testniprimeri*. 
 
 :two: Prevedba nekaj znanih problemov na SAT obliko, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, ter *resljivostSudoku*.
 
@@ -20,14 +20,16 @@ Projekt je razdeljen na dva dela:
 ===
 ##### SAT solver
 V datoteki *boolean* se nahajajo definicije logičnih objektov, ki jih potrebujemo v vseh ostalih programih (In, Ali, Spr za spremenljivko, Neg za negacijo...). Datoteka *Cnf*  pravtako vsebuje podobne definicije objektov, ki pa jih potrebujemo predvsem pri pretvorbi logičnih formul v CNF obliko.
-V *dpll* je, kot pove že ime, napisana naša luštkana implementacija dpll algoritma (t.j. algoritma, ki za dano SAT formulo pove, ali ji je možno zadostiti, in če ja, kako). Seveda vsebuje tudi kar nekaj pomožnih funkcij, katerih naloga pa je zapisana v njihovem opisu. 
+V *dpll2* je, kot pove že ime, napisana naša luštkana implementacija dpll algoritma (t.j. algoritma, ki za dano SAT formulo pove, ali ji je možno zadostiti, in če ja, kako). Seveda vsebuje tudi kar nekaj pomožnih funkcij, katerih naloga pa je zapisana v njihovem opisu. V *dpll* je napisana trotlziher verzija resevanja SAT problemov, ki deluje, a vseskozi uporablja tako navadno kot cnf obliko formule, zaradi česar je zelo počasna in ne spominja kaj dosti na dpll. Kot argument sprejme navadno obliko formule. 
+Pri dpll2 pa gre za precej spremenjeno začetno kodo, tako da uporablja zgolj cnf obliko. Pravtako ni poenostavljanj formul navadne oblike, kar proces še pohitri. Ta (dpll2) sprejme formulo v cnf obliki. 
 
-Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte).
+Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte). Preverja seveda dpll2 verzijo. Preverjanje počasnejše zadeve (dpll) odsvetujemo.
 
 
-Naš dpll sicer dela, vendar smo si zaznačili kar nekaj izboljšav (predvsem lepotnih), ki se jih še nameravamo lotiti. Dodano je tudi preverjanje čiste pojavitve.
+V algoritem je dodano tudi preverjanje čiste pojavitve, vendar se le-to zaenkrat izvede le na začetku, takoj ob klicu dpll-ja. Zato nameravamo kodo še preoblikovati, da se bo preverjala večkrat, saj utegne v nekaterih primerih prihraniti veliko časa.
 
-Kličemo ga takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. 
+Uporaba našega dpllja: 
+Kličemo ga (pri čemer najprej importamo datoteko dpll2) takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. 
 
 V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To nekako zveni bolj prijetno in optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
 
@@ -38,20 +40,20 @@ Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
 
 1. boolean:
   * Novo spremenljivko (tip Spr) ustvarimo s klicem `Spr("ime spremenljivke")`.
-  * Konjunkcija: Ali(x1, x2, ...), kjer so xi tipa Spr.
-  * Konjunkcija: In(x1, x2, ...), kjer so xi tipa Spr.
-  * Negacija: Neg(x), kjer x tipa Spr.
-  * True: T(), False: F().
-  * Poenostavljanje formul: izraz.poenostavi()
-  * Računanje CNF oblike: izraz.cnf()
+  * Konjunkcija: `Ali(x1, x2, ...)`, kjer so xi tipa Spr.
+  * Konjunkcija: `In(x1, x2, ...)`, kjer so xi tipa Spr.
+  * Negacija: `Neg(x)`, kjer x tipa Spr.
+  * True: `T()`, False: `F()`.
+  * Poenostavljanje formul: `izraz.poenostavi()`
+  * Računanje CNF oblike: `izraz.cnf()` (Vrne formulo tipa Cnf.)
 2. dpll:
-  * Preverjanje rešljivosti SAT problema: dpll(izraz), kjer je izraz tipa Ali, In, Spr, Neg, T ali F. Klic bo, kot že rečeno, vrnil 0, če problem ni rešljiv, ter ustrezen slovar, če je.
+  * Preverjanje rešljivosti SAT problema: dpll(izraz), kjer je izraz tipa Cnf. Klic bo, kot že rečeno, vrnil 0, če problem ni rešljiv, ter ustrezen slovar, če je.
 
 
 
 ===
 ##### Prevedba problemov na SAT obliko
-V datotekah *barvanje*, *sudoku* in *hadamard* se nahajajo funkcije, ki izpišejo SAT obliko posamezih obravnavanih problemov (Povezanost in ErdOševa diskrepanca še prideta nekoč...). Ostale datoteke tega dela so namenjene predvsem testiranju kode. 
+V datotekah *barvanje*, *sudoku* in *hadamard* se nahajajo funkcije, ki izpišejo SAT obliko posamezih obravnavanih problemov (Povezanost in ErdOševa diskrepanca pa morda še prideta nekoč...). Ostale datoteke tega dela so namenjene predvsem testiranju kode. 
 Imena in uporaba funkcij po problemih:
 
 
