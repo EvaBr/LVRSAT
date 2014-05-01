@@ -11,7 +11,7 @@ def dodaj(el, vred, slov):  #Dela na CNF obliki, tj el je tipa Til/Lit, ne pa Sp
 
 	spr = el.ime
 	if type(el)==Til:
-		vred = Neg(vred).nnf()
+		vred = Neg(vred).poenostavi()
 	slov[spr] = vred
 
 
@@ -65,37 +65,30 @@ def dpll(dieFormel):
 			dodaj(tip(i.ime), T(), slovarc)
 	for neki in slovarc:
 		zamenjaj(dieFormel, neki, slovarc[neki])
-	
-	print("po čisti pojavitvi: ", len(dieFormel.stavki))
 	###
 
 	def pomozna(formula, slovar):
 		#formula je cnf oblike
 		sprememba = True
 		while sprememba:
-			print("izvedba while zankice... ")
-			#print("formula ob zacetku zanke: ", formula)		
 			if formula.stavki==[]:
 				return (T(), slovar)
 			else:
 				for stavek in formula.stavki:
 					sprememba = False
 					if stavek.literali==[]:
-						print("prazn stavek!!")
 						return (F(), slovar)
 					elif len(stavek.literali)==1:  #Nasli smo stavek, ki je kar literal.
 						spremenljivka = stavek.literali[0]
 						#Nastavimo ustrezno vrednost spremenljivke:
 						dodaj(spremenljivka, T(), slovar)
 						zamenjaj(formula, spremenljivka.ime, slovar[spremenljivka.ime])
-						print("po zamenjavi spremenlj. "+spremenljivka.ime+" :  ", len(formula.stavki))
 						sprememba = True
 						break
 			
 		#Poglejmo, ali je ostala se kaksna spremenljivka brez vrednosti:
 		nasliNovo = False
 		for s in formula.stavki:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
-			print("furmula.stavk: ", s)
 			for l in s.literali:
 				nasliNovo = True
 				break
@@ -103,24 +96,19 @@ def dpll(dieFormel):
 	
 		if nasliNovo: #to bi se tako moralo zmeraj zgoditi, če pridemo do sem 
 
-			formula2 = Cnf([st for st in formula.stavki]) #naredimo kopijo, saj zadevo kasneje spreminjamo 'na mestu'
-			formula2.stavki.extend([Stavek([Lit(l.ime)])])
-			print("formula: ",len(formula.stavki),"  formula2: ",len(formula2.stavki))
-			
+			formula2 = Cnf([Stavek([litral for litral in st.literali]) for st in formula.stavki]) #naredimo kopijo, saj zadevo kasneje spreminjamo 'na mestu'
 			slovar2 = {i:slovar[i] for i in slovar} #naredimo kopijo, saj zadevo kasneje spreminjamo 'na mestu'
-			print("poskus z T():  ", len(formula2.stavki))
-			print("slovar za formulo2: ", slovar2)
+			slovar2[l.ime] = T()
+			zamenjaj(formula2, l.ime, T())
 			blabla = pomozna(formula2, slovar2)
 			if blabla[0]==T():
 				return blabla
 			else:
-				formula.stavki.extend([Stavek([Til(l.ime)])])
-				print("Ni slo s T, poskus z F:  ", len(formula.stavki))
-				print("slovar za formulo: ", slovar)
+				slovar[l.ime] = F()
+				zamenjaj(formula, l.ime, F())
 				return pomozna(formula, slovar)
 
 	rezultat = pomozna(dieFormel, slovarc)
-	print("rezultat: ", rezultat)
 	
 	#Nastimamo se vse nepotrebne zadeve v slovarju:
 	for teja in pojavitve:
