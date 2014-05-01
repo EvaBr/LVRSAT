@@ -28,12 +28,12 @@ Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primer
 V algoritem je dodano tudi preverjanje čiste pojavitve, vendar se le-to zaenkrat izvede le na začetku, takoj ob klicu dpll-ja. Zato nameravamo kodo še preoblikovati, da se bo preverjala večkrat, saj utegne v nekaterih primerih prihraniti veliko časa.
 
 Uporaba našega dpllja: 
-Kličemo ga (pri čemer najprej importamo datoteko dpll2) takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. 
+Kličemo ga (pri čemer najprej importamo datoteko dpll2) takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
 
-V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To nekako zveni bolj prijetno in optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
+V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki se v formuli pojavijo a so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To zveni bolj prijetno in optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
 
 
-Za skeptike, ki bi želeli delovanje implementacije preveriti še na zapletenejših primerih, smo v drugem delu projekta sestavili SAT oblike nekaterih znanih problemov (npr. rešljivost sudokuja, k barvanje grafa ...), na katerih se lahko preveri tako preoblikovanje na CNF obliko kot tudi delovanje dpll-ja.
+Za skeptike, ki bi želeli delovanje implementacije preveriti še na zapletenejših primerih, smo v drugem delu projekta sestavili SAT oblike nekaterih znanih problemov (npr. rešljivost sudokuja in k barvanje grafa), na katerih se lahko preveri tako preoblikovanje na CNF obliko kot tudi delovanje dpll-ja.
 
 Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
 
@@ -64,7 +64,7 @@ Funkcija vrne logično formulo, ki ustreza SAT obliki tega problema, pri čemer 
 
 Primer uporabe: `formula = barvanje(5, [(1,3), (2,3), (4,5), (2,4), (2,5)])`
 
-Povsem analogno deluje tudi funkcija **kbarvanje(K, n, E)**, ki pa ji moramo dodatno (kot prvi argument) podati še število barv K.
+Povsem analogno deluje tudi funkcija **kbarvanje(K, n, E)**, ki pa ji moramo dodatno (kot prvi argument) podati še (naravno) število barv K.
 
 Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V njej je zapisanih nekaj definicij grafov, na katerih se kliče glavna funkcija **kbarvanje**. Za osnovno testiranje bo torej poskrbel že sam zagon datoteke **grafi**, v kolikor želiš preveriti delovanje na kakšnem povsem drugačnem grafu, pa lahko (po importanju modulov *dpll* in *barvanje*) na njem najprej pokličeš **kbarvanje**, nato pa še **dpll** : `rezultat = dpll(kbarvanje(K,n,E))`.
 
@@ -81,8 +81,8 @@ Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verja
 
 Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
-Pravilnost kode se lahko preverja s pomočjo datotek *primeri* in *resljivostSudoku*. In sicer je potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku*.
-Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev human readable obliki.  
+Pravilnost kode se lahko preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) s pomočjo datotek *primeri* in *resljivostSudoku*. In sicer je potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku*.
+Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki.  
 
 Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imajo zopet obliko trojic i,j,k, ki predstavljajo trditev, da v rešenem sudokuju na mesto v i-ti vrstici in j-tem stolpcu spada število k.
 
@@ -93,3 +93,13 @@ Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imaj
 
 
 ===
+===
+
+###### Težave z delovanjem programov:
+
+Prevedba na SAT za barvanje grafov deluje, pravtako preverjanje delovanja dpll-ja na teh primerih. 
+Več težav smo imeli pri sudokujih - datoteka **sudoku** vrne, kot se zdi, pravilno formulo problema. Toda ko na cnf obliki takšne formule pokličemo dpll, stvari iz nam neznanega razloga nehajo biti tako rožnate. Če ga namreč pokličemo na praznem sudokuju, reče da le ta ni rešljiv. Tudi če ga pokličemo na kakšnem od zagotovo rešljivih sudokujev z interneta, ima včasih težave -  na nekaj primerih se nam je zgodilo, da je deloval (vrnil T in pravilno rešitev sudokuja), kakorhitro pa smo odvzeli kakšno omejitev (mu "pozabili podati" katerega od že izpolnjenih polj), pa je bil naenkrat nerešljiv...
+
+S problemom se aktivno ukvarjamo; zaenkrat nam še ni uspelo odkriti, kje bi bila težava. Funkcija `sudoku` izgleda pravilna, zato se zdi, da je ščurek v dpll-ju. Kar pa je nadvse čudno, glede na to, da ta deluje na vse ostalih primerih.
+
+Za obvestila o odpravi nadležnega ščurkca  prosim opazuj naš repozitorij...
