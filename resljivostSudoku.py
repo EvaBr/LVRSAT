@@ -31,7 +31,7 @@ def preberi(fajlSprimeri):
 	vpisano = {}
 	vrstica = -1
 	for line in file:
-		vrstica += 1
+		vrstica+=1
 		if vrstica<13 or vrstica%2==0:
 			continue
 		#else:
