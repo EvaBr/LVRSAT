@@ -63,6 +63,6 @@ def sudoku(zasedena):
     if zasedena!=[]:
         sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
     else: 
-	sestidel = T()
+        sestidel = T()
 
     return In(prvidel, drugidel, tretjidel, cetrtidel, petidel, sestidel)

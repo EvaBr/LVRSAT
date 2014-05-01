@@ -37,13 +37,13 @@ def preberi(fajlSprimeri):
 		#else:
 		try:
 			for k in range(9):
-				if line[2+4*k] != " ":
+				if line[2+4*k]!=" ":
 					vpisano[k+1] = int(line[2+4*k])
 			for element in vpisano:
 				polja.append((vrstica, element, vpisano[element]))
 		except IndexError:
 			continue
-		if vrstica%24 == 9:
+		if vrstica%24==9:
 			print("polja: ",polja)
 			koncna.append(polja)
 			polja = []
