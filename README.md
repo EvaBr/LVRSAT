@@ -93,13 +93,12 @@ Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imaj
 
 
 ===
-===
 
-###### Težave z delovanjem programov:
+###### Dodatne informacije o delovanju programov:
 
-Prevedba na SAT za barvanje grafov deluje, pravtako preverjanje delovanja dpll-ja na teh primerih. 
-Več težav smo imeli pri sudokujih - datoteka **sudoku** vrne, kot se zdi, pravilno formulo problema. Toda ko na cnf obliki takšne formule pokličemo dpll, stvari iz nam neznanega razloga nehajo biti tako rožnate. Če ga namreč pokličemo na praznem sudokuju, reče da le ta ni rešljiv. Tudi če ga pokličemo na kakšnem od zagotovo rešljivih sudokujev z interneta, ima včasih težave -  na nekaj primerih se nam je zgodilo, da je deloval (vrnil T in pravilno rešitev sudokuja), kakorhitro pa smo odvzeli kakšno omejitev (mu "pozabili podati" katerega od že izpolnjenih polj), pa je bil naenkrat nerešljiv...
+Dpll deluje, preverjanje na grafih tudi, medtem ko program za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, program resljivostSudoku pa potrebuje nekaj popravkov. Končan bo predvidoma do konca prvomajskih počitnic.
 
-S problemom se aktivno ukvarjamo; zaenkrat nam še ni uspelo odkriti, kje bi bila težava. Funkcija `sudoku` izgleda pravilna, zato se zdi, da je ščurek v dpll-ju. Kar pa je nadvse čudno, glede na to, da ta deluje na vse ostalih primerih.
+Zaradi nedelovanja te skripte z avtomatskim preverjanjem reševanja, smo pripravili datoteko **sudokuji**, kjer je zpisanih nekaj primerov sudokujev, na katerih lahko preizkusiš dpll ročno.
 
-Za obvestila o odpravi nadležnega ščurkca  prosim opazuj naš repozitorij...
+
+Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko.
