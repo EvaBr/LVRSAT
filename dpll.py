@@ -50,7 +50,8 @@ def dpll(dieFormel):
 		Ce ji je, vrne slovar potrebnih vrednosti spremenljivk. """
 
 	slovarc = {}
-	### Cista pojavitev:
+
+###
 	pojavitve = {}
 	for stavk in dieFormel.stavki:
 		for lit in stavk.literali:
@@ -62,13 +63,29 @@ def dpll(dieFormel):
 	for i in pojavitve:
 		if len(pojavitve[i])==1:
 			tip = pojavitve[i].pop()
-			dodaj(tip(i.ime), T(), slovarc)
-	for neki in slovarc:
-		zamenjaj(dieFormel, neki, slovarc[neki])
-	###
+			dodaj(tip(i), T(), slovar)
+			zamenjaj(dieFormel, i, slovar[i])
+###
 
 	def pomozna(formula, slovar):
 		#formula je cnf oblike
+		
+		### Cista pojavitev:
+		pojavitve2 = {}
+		for stavk in formula.stavki:
+			for lit in stavk.literali:
+				S = lit.ime
+				if S in pojavitve2:
+					pojavitve2[S].add(type(lit))
+				else:
+					pojavitve2[S] = {type(lit)}
+		for i in pojavitve2:
+			if len(pojavitve2[i])==1:
+				tip = pojavitve2[i].pop()
+				dodaj(tip(i), T(), slovar)
+				zamenjaj(formula, i, slovar[i])
+		###
+
 		sprememba = True
 		while sprememba:
 			if formula.stavki==[]:
