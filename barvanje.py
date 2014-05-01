@@ -26,13 +26,13 @@ def barvanje(n, E):
     #vsako vozlišče je pobarvano vsaj z eno barvo
     for i in range(1,n+1):
         prva = In(Ali(Spr("c{0}.1".format(i)), Spr("c{0}.2".format(i)), Spr("c{0}.3".format(i))), prva)
-    prva=prva.poenostavi()
+    prva = prva.poenostavi()
 
     #eno vozlišče ni pobarvano z več kot eno barvo
     for i in range(1,n+1):
         druga = In(druga, In(Neg(In(Spr("c{0}.1".format(i)),Spr("c{0}.2".format(i)))),
                    Neg(In(Spr("c{0}.1".format(i)),Spr("c{0}.3".format(i)))),Neg(In(Spr("c{0}.3".format(i)),Spr("c{0}.2".format(i))))))
-    druga=druga.poenostavi()
+    druga = druga.poenostavi()
 
     #sosednji vozlišči sta različnih barv
     for pov in E:

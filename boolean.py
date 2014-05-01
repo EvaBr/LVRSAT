@@ -81,14 +81,14 @@ class Spr():
         return self
     
     def nnf(self, negiramo=False):
-        """Vrni nnf obliko objekta self."""
+        """Vrne nnf obliko objekta self."""
         if negiramo:
             return Neg(self)
         else:
             return self
 
     def cnf(self):
-        """Vrni CNF obliko objekta self."""
+        """Vrne CNF obliko objekta self."""
         return Cnf([Stavek([Lit(self.ime)])])
     
     
@@ -200,8 +200,7 @@ class In():
                     if i.izr in j:
                         return F()
 
-        #absorpcija in common identities
-        #TO POENOSTAVI/SPREMENI
+        #absorp., common ident.
         if Ali in slo:
             menjave = {}
             for i in slo[Ali]:
@@ -224,9 +223,9 @@ class In():
       
             del slo[In]
         
-        mn=set()
+        mn = set()
         for i in slo.values():
-            mn|=i
+            mn |= i
         return In(*tuple(mn))
 
     def nnf(self, negiramo=False):
@@ -302,7 +301,7 @@ class Ali():
                             menjave[i] = 0
                         elif Neg(k) in i.sez: #common id
                             menjave[i] = set(i.sez)-{Neg(k)}
-            slo[In]={(In(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[In]} - {None}
+            slo[In] = {(In(*tuple(menjave[i])) if menjave[i] != 0 else None) if i in menjave else i for i in slo[In]} - {None}
                 
 
        
@@ -316,7 +315,7 @@ class Ali():
 
         mn = set()
         for i in slo.values():
-            mn|=i
+            mn |= i
         return Ali(*tuple(mn))
 
     def nnf(self, negiramo=False):

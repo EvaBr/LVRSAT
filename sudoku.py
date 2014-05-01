@@ -20,48 +20,49 @@ from cnf import *
 
 def sudoku(zasedena):
     def sprem(k1,k2,v):
-        return Spr(str(k1)+","+str(k2)+","+str(v))
+        return Spr(str(k1) + "," + str(k2) + "," + str(v))
     
     #vsako polje je pobarvano
-    prvidel = In(*tuple(Ali(*tuple(sprem(i, j, k) for k in range(1,10)))
-                        for i in range(1,10)
-                        for j in range(1,10)))
+    prvidel = In(*tuple(Ali(*tuple(sprem(i, j, k) for k in range(1, 10)))
+                        for i in range(1, 10)
+                        for j in range(1, 10)))
     
     #nobeno polje ni pobarvano z več kot eno barvo
     drugidel = In(*tuple(In(*tuple(Neg(In(sprem(i, j, k), sprem(i, j, l)))
-                                  for l in range(1,10)
-                                  for k in range(1,l)))
-                        for i in range(1,10)
-                        for j in range(1,10)))
+                                  for l in range(1, 10)
+                                  for k in range(1, l)))
+                        for i in range(1, 10)
+                        for j in range(1, 10)))
 
     #barva se ne ponovi v stolpcu
-    tretjidel = In(*tuple(Neg(In(sprem(i,j,k),sprem(l,j,k)))
-                   for j in range (1,10)
-                   for k in range (1,10)
-                   for i in range (1,10)
-                   for l in range (i+1,10)))
+    tretjidel = In(*tuple(Neg(In(sprem(i, j, k), sprem(l, j, k)))
+                   for j in range (1, 10)
+                   for k in range (1, 10)
+                   for i in range (1, 10)
+                   for l in range (i+1, 10)))
     
     #barva se ne ponovi v vrstici
-    cetrtidel = In(*tuple(Neg(In(sprem(i,j,k),sprem(i,l,k)))
-                   for i in range (1,10)
-                   for k in range (1,10)
-                   for j in range (1,10)
-                   for l in range (j+1,10)))
+    cetrtidel = In(*tuple(Neg(In(sprem(i, j, k), sprem(i, l, k)))
+                   for i in range (1, 10)
+                   for k in range (1, 10)
+                   for j in range (1, 10)
+                   for l in range (j+1, 10)))
 
     #barva se ne ponovi v 3x3 podkvadratu
-    petidel = In(*tuple(In(*tuple(Neg(In(sprem(i,j,k),sprem(m,n,k)))
-                                   for i in range (I,I+3)
-                                   for j in range (J,J+3)
-                                   for m in range(I,I+3)
-                                   for n in range (J,J+3)
+    petidel = In(*tuple(In(*tuple(Neg(In(sprem(i, j, k), sprem(m, n, k)))
+                                   for i in range(I, I+3)
+                                   for j in range(J, J+3)
+                                   for m in range(I, I+3)
+                                   for n in range(J, J+3)
                                    if not (i==m and j==n)
-                                   for k in range (1,10)))
-                        for I in range (1,10,3)
-                        for J in range (1,10,3)))
+                                   for k in range (1, 10)))
+                        for I in range(1, 10, 3)
+                        for J in range(1, 10, 3)))
     
     #ali je izpolnjeno zacetno stanje
-    if zasedena != []:
+    if zasedena!=[]:
         sestidel = In(*tuple(sprem(i[0],i[1],i[2]) for i in zasedena))
-    else: sestidel = T()
+    else: 
+	sestidel = T()
 
     return In(prvidel, drugidel, tretjidel, cetrtidel, petidel, sestidel)
