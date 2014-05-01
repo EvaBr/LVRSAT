@@ -81,8 +81,14 @@ Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verja
 
 Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
-Pravilnost kode se lahko preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) s pomočjo datotek *primeri* in *resljivostSudoku*. In sicer je potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku*.
-Zaenkrat je testiranje še okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki.  
+Pravilnost kode se lahko preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
+
+In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje zares, zato ne priporočamo zagona! ).
+
+Drugi način testiranja, ki pa celo že deluje ( :grey_exclamation: ), je možno izvesti preko zagona skripte *sudokuji*. Program bo izvedel testiranje na 10 random generiranih sudokujih, ter na praznem in na petih rešljivih (povzetih z interneta), že podanih sudokujih.
+Glavna pomanjkljivost tega programa: vnašanje sudokujev ni možno v človeku prijazni, pregledni obliki.
+
+Seveda lahko rešljivost sudokuja (imenujmo ga MOJSUDOKU) preverimo tudi ročno: `dpll(sudoku(MOJSUDOKU).cnf())`. Kot je razloženo že v opisu *dpll*-ja, v primeru nerešljivosti ta klic vrne 0, sicer pa slovar.
 
 Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imajo zopet obliko trojic i,j,k, ki predstavljajo trditev, da v rešenem sudokuju na mesto v i-ti vrstici in j-tem stolpcu spada število k.
 
@@ -94,11 +100,9 @@ Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imaj
 
 ===
 
-###### Dodatne informacije o delovanju programov:
+###### Neodpravljene težave in dodatne informacije o delovanju programov:
 
-Dpll deluje, preverjanje na grafih tudi, medtem ko program za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, program resljivostSudoku pa potrebuje nekaj popravkov. Končan bo predvidoma do konca prvomajskih počitnic.
-
-Zaradi nedelovanja te skripte z avtomatskim preverjanjem reševanja, smo pripravili datoteko **sudokuji**, kjer je zpisanih nekaj primerov sudokujev, na katerih lahko preizkusiš dpll ročno.
+Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa **sudokuji**, program **resljivostSudoku** pa potrebuje nekaj popravkov. Končan bo predvidoma do konca prvomajskih počitnic.
 
 
 Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko.
