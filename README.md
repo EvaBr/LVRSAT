@@ -12,7 +12,7 @@
 
 Projekt je razdeljen na dva dela:
 
-:one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri*. 
+:one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri* (dodatno še *dpll_ena_cista_pojavitev*, *dpll_brez*, ter *primerjavaCasov*). 
 
 :two: Prevedba nekaj znanih problemov na SAT obliko, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, ter *resljivostSudoku*.
 
@@ -20,20 +20,29 @@ Projekt je razdeljen na dva dela:
 ===
 ##### SAT solver
 V datoteki *boolean* se nahajajo definicije logičnih objektov, ki jih potrebujemo v vseh ostalih programih (In, Ali, Spr za spremenljivko, Neg za negacijo...). Datoteka *Cnf*  pravtako vsebuje podobne definicije objektov, ki pa jih potrebujemo predvsem pri pretvorbi logičnih formul v CNF obliko.
-V *dpll* je, kot pove že ime, napisana naša luštkana implementacija dpll algoritma (t.j. algoritma, ki za dano SAT formulo pove, ali ji je možno zadostiti, in če ja, kako). Seveda vsebuje tudi kar nekaj pomožnih funkcij, katerih naloga pa je zapisana v njihovem opisu. Glavna funkcija dpll, ki izvede algoritem, sprejme formulo v cnf obliki. 
+V *dpll* je, kot pove že ime, napisana naša luštkana implementacija dpll algoritma (t.j. algoritma, ki za dano SAT formulo pove, ali ji je možno zadostiti, in če ja, kako). Seveda vsebuje tudi kar nekaj pomožnih funkcij, katerih naloga pa je zapisana v njihovem opisu.
+Glavna funkcija dpll, ki izvede algoritem, sprejme formulo v cnf obliki. Vsebuje tudi preverjanje čiste pojavitve ob vsaki spremembi podane formule. 
 
 Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte).
-
-
-V algoritem je dodano tudi preverjanje čiste pojavitve, vendar se le-to zaenkrat izvede na začetku, takoj ob klicu dpll-ja, ter ob vsakem klicu pomožne funkcije. Zato nameravamo kodo še preoblikovati, da bo čista pojavitev na najprimernejšem delu in bo prihranila čimveč časa.
 
 Uporaba našega dpllja: 
 Kličemo ga (pri čemer najprej importamo datoteko *dpll*) takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
 
 V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki se v formuli pojavijo a so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To zveni bolj prijetno in optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
 
-
 Za skeptike, ki bi želeli delovanje implementacije preveriti še na zapletenejših primerih, smo v drugem delu projekta sestavili SAT oblike nekaterih znanih problemov (npr. rešljivost sudokuja in k barvanje grafa), na katerih se lahko preveri tako preoblikovanje na CNF obliko kot tudi delovanje dpll-ja.
+
+############
+**DODATNO:**
+V dodatnih datotekah *dpll_brez* in *dpll_ena_cista_pojavitev* se nahajata zgolj informativni implementaciji algoritma brez oz. z eno čisto pojavitvijo;
+v *dpll_brez*, kjer ima glavna funkcija ime `dpll_osnoven`, ni nikakršnega preverjanja čiste pojavitve, v *dpll_ena_cista_pojavitev* pa je to dodano le na začetku, takoj ob klicu glavne funkcije te implementacije; `dpll_brez_ciste`. 
+Za primerjanje trajanja klicev vseh treh implementacij dpll-ja je dodan še programček *primerjavaCasov*, ki štopa čas izvajanja algoritmov na sudoku primerih;
+ ob zagonu je možno izbrati, katere od implementacij želiš preverjati, ter na koliko random generiranih sudokujih. (V vsakem primeru se bodo izbrane 
+implementacije primerjale še na praznem sudokuju ter na 5-ih rešljivih različnih težavnosti (enakih, kot se nahajajo v datot. *sudokuji*).)
+Med izvajanjem bo program izpisoval pretekel čas za posamezne klice algoritmov.
+
+Tako `dpll_osnoven` kot tudi `dpll_brez_ciste` sicer delujeta na enak način kot `dpll`.
+###########
 
 Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
 
@@ -81,7 +90,7 @@ Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verja
 
 Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
-Pravilnost kode se lahko preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
+Pravilnost implementacije dpllja se lahko na teh dobljenih "sudoku SAT formulah" preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
 
 In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje zares, zato ne priporočamo zagona! ).
 
@@ -102,9 +111,8 @@ Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imaj
 
 ###### Neodpravljene težave in dodatne informacije o delovanju programov:
 
-Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa **sudokuji**, program **resljivostSudoku** pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma do konca prvomajskih počitnic.
+Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa **sudokuji**, program **resljivostSudoku** pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma: :soon: .
 
-Možna nadgradnja dpllja bi bila v boljši implementaciji čiste pojavitve. Trenutno jo namreč preverja takoj ob klicu ter na vsakem rekurzivnem klicu pomožne funkcije. Kar pomeni, da se takoj na začetku klica dpll-ja izvede dvakrat (brezvezna poraba cajta in prostora), pa še bolj smotrno bi jo bilo postaviti za zanko while, saj se nam lahko nove čiste pojavitve zgodijo takoj po zamenjavi katere od spremenljivk. Vendar pa bi ob tovrstni prestavitvi te čiste pojavitve morali paziti še, da po njej ne dobimo kar prazne formule. Ta nadgradnja bo urejena predvidoma do konca počitnic.
-
-
-Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko.
+Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko (okoli 10 sekund).
+Ob zagonu programa *primerjavaCasov* je mozno opaziti tudi, da v splošnem naša implementacija čiste pojavitve v `dpll` zadev sploh ne pohitri. Najhitreje deluje tista implementacija, kjer se čista pojavitev sicer preverja, a le takoj na začetku, ob klicu funkcije 
+(to pa je iplementacija `dpll_brez_ciste` v skriptki *dpll_ena_cista_pojavitev*).
