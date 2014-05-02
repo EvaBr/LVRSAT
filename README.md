@@ -104,5 +104,7 @@ Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imaj
 
 Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa **sudokuji**, program **resljivostSudoku** pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma do konca prvomajskih počitnic.
 
+Možna nadgradnja dpllja bi bila v boljši implementaciji čiste pojavitve. Trenutno jo namreč preverja takoj ob klicu ter na vsakem rekurzivnem klicu pomožne funkcije. Kar pomeni, da se takoj na začetku klica dpll-ja izvede dvakrat (brezvezna poraba cajta in prostora), pa še bolj smotrno bi jo bilo postaviti za zanko while, saj se nam lahko nove čiste pojavitve zgodijo takoj po zamenjavi katere od spremenljivk. Vendar pa bi ob tovrstni prestavitvi te čiste pojavitve morali paziti še, da po njej ne dobimo kar prazne formule. Ta nadgradnja bo urejena predvidoma do konca počitnic.
+
 
 Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko.
