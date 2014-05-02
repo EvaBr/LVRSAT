@@ -25,10 +25,10 @@ V *dpll* je, kot pove že ime, napisana naša luštkana implementacija dpll algo
 Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte).
 
 
-V algoritem je dodano tudi preverjanje čiste pojavitve, vendar se le-to zaenkrat izvede le na začetku, takoj ob klicu dpll-ja. Zato nameravamo kodo še preoblikovati, da se bo preverjala večkrat, saj utegne v nekaterih primerih prihraniti veliko časa.
+V algoritem je dodano tudi preverjanje čiste pojavitve, vendar se le-to zaenkrat izvede na začetku, takoj ob klicu dpll-ja, ter ob vsakem klicu pomožne funkcije. Zato nameravamo kodo še preoblikovati, da bo čista pojavitev na najprimernejšem delu in bo prihranila čimveč časa.
 
 Uporaba našega dpllja: 
-Kličemo ga (pri čemer najprej importamo datoteko dpll2) takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
+Kličemo ga (pri čemer najprej importamo datoteko *dpll*) takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
 
 V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki se v formuli pojavijo a so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To zveni bolj prijetno in optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
 
@@ -46,7 +46,7 @@ Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
   * Poenostavljanje formul: `izraz.poenostavi()`
   * Računanje CNF oblike: `izraz.cnf()` (Vrne formulo tipa Cnf.)
 2. dpll:
-  * Preverjanje rešljivosti SAT problema: dpll(izraz), kjer je izraz tipa Cnf. Klic bo, kot že rečeno, vrnil 0, če problem ni rešljiv, ter ustrezen slovar, če je.
+  * Preverjanje rešljivosti SAT problema: `dpll(izraz)`, kjer je izraz tipa Cnf. Klic bo, kot že rečeno, vrnil 0, če problem ni rešljiv, ter ustrezen slovar, če je.
 
 
 
@@ -102,7 +102,7 @@ Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imaj
 
 ###### Neodpravljene težave in dodatne informacije o delovanju programov:
 
-Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa **sudokuji**, program **resljivostSudoku** pa potrebuje nekaj popravkov. Končan bo predvidoma do konca prvomajskih počitnic.
+Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa **sudokuji**, program **resljivostSudoku** pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma do konca prvomajskih počitnic.
 
 
 Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko.

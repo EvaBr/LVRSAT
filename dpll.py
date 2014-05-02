@@ -50,7 +50,8 @@ def dpll(dieFormel):
 		Ce ji je, vrne slovar potrebnih vrednosti spremenljivk. """
 
 	slovarc = {}
-	### Cista pojavitev:
+
+	###Prva cista pojavitev, kjer si zapomnimo tudi nastopajoce spremenljivke:
 	pojavitve = {}
 	for stavk in dieFormel.stavki:
 		for lit in stavk.literali:
@@ -62,14 +63,14 @@ def dpll(dieFormel):
 	for i in pojavitve:
 		if len(pojavitve[i])==1:
 			tip = pojavitve[i].pop()
-			dodaj(tip(i.ime), T(), slovarc)
-	for neki in slovarc:
-		zamenjaj(dieFormel, neki, slovarc[neki])
+			dodaj(tip(i), T(), slovarc)
+			zamenjaj(dieFormel, i, slovarc[i])
 	###
 
 	def pomozna(formula, slovar):
 		#formula je cnf oblike
 		sprememba = True
+		jeBlaSprememba = False
 		while sprememba:
 			if formula.stavki==[]:
 				return (T(), slovar)
@@ -84,8 +85,26 @@ def dpll(dieFormel):
 						dodaj(spremenljivka, T(), slovar)
 						zamenjaj(formula, spremenljivka.ime, slovar[spremenljivka.ime])
 						sprememba = True
+						jeBlaSprememba = True
 						break
-			
+		if jeBlaSprememba:
+			###Cista pojavitev:
+			pojavitve2 = {}
+			for stavk in formula.stavki:
+				for lit in stavk.literali:
+					S = lit.ime
+					if S in pojavitve2:
+						pojavitve2[S].add(type(lit))
+					else:
+						pojavitve2[S] = {type(lit)}
+			for i in pojavitve2:
+				if len(pojavitve2[i])==1:
+					tip = pojavitve2[i].pop()
+					dodaj(tip(i), T(), slovar)
+					zamenjaj(formula, i, slovar[i])
+			###
+
+
 		#Poglejmo, ali je ostala se kaksna spremenljivka brez vrednosti:
 		nasliNovo = False
 		for s in formula.stavki:  #Poisces eno spremenljivko, ki se ni v slovarju, tj. ji vrednost se ni dolocena.
@@ -94,8 +113,7 @@ def dpll(dieFormel):
 				break
 			if nasliNovo: break
 	
-		if nasliNovo: #to bi se tako moralo zmeraj zgoditi, če pridemo do sem 
-
+		if nasliNovo: #to se zgogi, ce po cisti pojavitvi se ostane kaj od formule
 			formula2 = Cnf([Stavek([litral for litral in st.literali]) for st in formula.stavki]) #naredimo kopijo, saj zadevo kasneje spreminjamo 'na mestu'
 			slovar2 = {i:slovar[i] for i in slovar} #naredimo kopijo, saj zadevo kasneje spreminjamo 'na mestu'
 			slovar2[l.ime] = T()
@@ -107,6 +125,12 @@ def dpll(dieFormel):
 				slovar[l.ime] = F()
 				zamenjaj(formula, l.ime, F())
 				return pomozna(formula, slovar)
+		else: #torej nam je cista pojavitev porihtala vse
+			if formula.stavki==[]:
+				return (T(), slovar)
+			else: #if formula.stavki[i].literali = [] za nek i
+				return (F(), slovar)
+
 
 	rezultat = pomozna(dieFormel, slovarc)
 	
