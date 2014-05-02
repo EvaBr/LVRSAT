@@ -32,17 +32,17 @@ V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki se v formuli pojavi
 
 Za skeptike, ki bi želeli delovanje implementacije preveriti še na zapletenejših primerih, smo v drugem delu projekta sestavili SAT oblike nekaterih znanih problemov (npr. rešljivost sudokuja in k barvanje grafa), na katerih se lahko preveri tako preoblikovanje na CNF obliko kot tudi delovanje dpll-ja.
 
-############
+***
 **DODATNO:**
 V dodatnih datotekah *dpll_brez* in *dpll_ena_cista_pojavitev* se nahajata zgolj informativni implementaciji algoritma brez oz. z eno čisto pojavitvijo;
-v *dpll_brez*, kjer ima glavna funkcija ime `dpll_osnoven`, ni nikakršnega preverjanja čiste pojavitve, v *dpll_ena_cista_pojavitev* pa je to dodano le na začetku, takoj ob klicu glavne funkcije te implementacije; `dpll_brez_ciste`. 
+v *dpll_brez*, kjer ima glavna funkcija ime **dpll_osnoven**, ni nikakršnega preverjanja čiste pojavitve, v *dpll_ena_cista_pojavitev* pa je to dodano le na začetku, takoj ob klicu glavne funkcije te implementacije; **dpll_brez_ciste**. 
 Za primerjanje trajanja klicev vseh treh implementacij dpll-ja je dodan še programček *primerjavaCasov*, ki štopa čas izvajanja algoritmov na sudoku primerih;
  ob zagonu je možno izbrati, katere od implementacij želiš preverjati, ter na koliko random generiranih sudokujih. (V vsakem primeru se bodo izbrane 
 implementacije primerjale še na praznem sudokuju ter na 5-ih rešljivih različnih težavnosti (enakih, kot se nahajajo v datot. *sudokuji*).)
 Med izvajanjem bo program izpisoval pretekel čas za posamezne klice algoritmov.
 
-Tako `dpll_osnoven` kot tudi `dpll_brez_ciste` sicer delujeta na enak način kot `dpll`.
-###########
+Tako klic `dpll_osnoven(...)` kot tudi klic `dpll_brez_ciste(...)` sicer delujeta na enak način kot `dpll(...)`.
+***
 
 Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
 
@@ -111,8 +111,8 @@ Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imaj
 
 ###### Neodpravljene težave in dodatne informacije o delovanju programov:
 
-Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa **sudokuji**, program **resljivostSudoku** pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma: :soon: .
+Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa *sudokuji*, program *resljivostSudoku* pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma: :soon: .
 
 Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko (okoli 10 sekund).
-Ob zagonu programa *primerjavaCasov* je mozno opaziti tudi, da v splošnem naša implementacija čiste pojavitve v `dpll` zadev sploh ne pohitri. Najhitreje deluje tista implementacija, kjer se čista pojavitev sicer preverja, a le takoj na začetku, ob klicu funkcije 
-(to pa je iplementacija `dpll_brez_ciste` v skriptki *dpll_ena_cista_pojavitev*).
+Ob zagonu programa *primerjavaCasov* je mozno opaziti tudi, da v splošnem naša implementacija čiste pojavitve v funkciji **dpll** zadev sploh ne pohitri. Najhitreje deluje tista implementacija, kjer se čista pojavitev sicer preverja, a le takoj na začetku, ob klicu funkcije 
+(to pa je iplementacija s funkcijo **dpll_brez_ciste** v skriptki *dpll_ena_cista_pojavitev*).
