@@ -51,7 +51,7 @@ def dpll(dieFormel):
 
 	slovarc = {}
 
-###
+### Prva cista pojavitev, kjer si zapomnimo se vse nastopajoce spremenljivke:
 	pojavitve = {}
 	for stavk in dieFormel.stavki:
 		for lit in stavk.literali:
@@ -63,29 +63,13 @@ def dpll(dieFormel):
 	for i in pojavitve:
 		if len(pojavitve[i])==1:
 			tip = pojavitve[i].pop()
-			dodaj(tip(i), T(), slovar)
-			zamenjaj(dieFormel, i, slovar[i])
+			dodaj(tip(i), T(), slovarc)
+			zamenjaj(dieFormel, i, slovarc[i])
 ###
 
 	def pomozna(formula, slovar):
 		#formula je cnf oblike
 		
-		### Cista pojavitev:
-		pojavitve2 = {}
-		for stavk in formula.stavki:
-			for lit in stavk.literali:
-				S = lit.ime
-				if S in pojavitve2:
-					pojavitve2[S].add(type(lit))
-				else:
-					pojavitve2[S] = {type(lit)}
-		for i in pojavitve2:
-			if len(pojavitve2[i])==1:
-				tip = pojavitve2[i].pop()
-				dodaj(tip(i), T(), slovar)
-				zamenjaj(formula, i, slovar[i])
-		###
-
 		sprememba = True
 		jeBlaSprememba = False
 		while sprememba:
@@ -105,7 +89,7 @@ def dpll(dieFormel):
 						jeBlaSprememba = True
 						break
 		if jeBlaSprememba:
-			###Cista pojavitev:
+			### Ce smo vstavili neko vrednost, se nam lahko pojavi kaksna nova cista pojavitev:
 			pojavitve2 = {}
 			for stavk in formula.stavki:
 				for lit in stavk.literali:
