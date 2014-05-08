@@ -21,12 +21,12 @@ Projekt je razdeljen na dva dela:
 ##### SAT solver
 V datoteki *boolean* se nahajajo definicije logičnih objektov, ki jih potrebujemo v vseh ostalih programih (In, Ali, Spr za spremenljivko, Neg za negacijo...). Datoteka *Cnf*  pravtako vsebuje podobne definicije objektov, ki pa jih potrebujemo predvsem pri pretvorbi logičnih formul v CNF obliko.
 V *dpll* je, kot pove že ime, napisana naša luštkana implementacija dpll algoritma (t.j. algoritma, ki za dano SAT formulo pove, ali ji je možno zadostiti, in če ja, kako). Seveda vsebuje tudi kar nekaj pomožnih funkcij, katerih naloga pa je zapisana v njihovem opisu.
-Glavna funkcija dpll, ki izvede algoritem, sprejme formulo v cnf obliki. Vsebuje tudi preverjanje čiste pojavitve ob vsaki spremembi podane formule. 
+Glavna funkcija dpll, ki izvede algoritem, sprejme formulo v cnf obliki. Vsebuje tudi preverjanje čiste pojavitve ob vsaki spremembi podane formule. Vendar pazljivo! Formula, ki jo dpll sprejme, je po njegovi izvedbi spremenjena (saj smo se po premisleku odločili in ga sprogramirali tako, da kar nekaj sprememb naredi 'na mestu') !
 
 Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte).
 
 Uporaba našega dpllja: 
-Kličemo ga (pri čemer najprej importamo datoteko *dpll*) takole: `R = dpll(formula)`, pri čemer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
+Kličemo ga (pri čemer najprej importamo datoteko *dpll*) takole: `R = dpll(formula)`, kjer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
 
 V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki se v formuli pojavijo a so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To zveni bolj prijetno in optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
 
@@ -36,7 +36,7 @@ Za skeptike, ki bi želeli delovanje implementacije preveriti še na zapletenej�
 **DODATNO:**
 V dodatnih datotekah *dpll_brez* in *dpll_ena_cista_pojavitev* se nahajata zgolj informativni implementaciji algoritma brez oz. z eno čisto pojavitvijo;
 v *dpll_brez*, kjer ima glavna funkcija ime **dpll_osnoven**, ni nikakršnega preverjanja čiste pojavitve, v *dpll_ena_cista_pojavitev* pa je to dodano le na začetku, takoj ob klicu glavne funkcije te implementacije; **dpll_brez_ciste**. 
-Za primerjanje trajanja klicev vseh treh implementacij dpll-ja je dodan še programček *primerjavaCasov*, ki štopa čas izvajanja algoritmov na sudoku primerih;
+Za primerjanje trajanja klicev vseh treh implementacij dpll-ja je dodan še programček *primerjavaCasov*, ki štopa čas izvajanja algoritmov na sudoku primerih (delovanje dpll na sudokujih je opisano malo nižje...);
  ob zagonu je možno izbrati, katere od implementacij želiš preverjati, ter na koliko random generiranih sudokujih. (V vsakem primeru se bodo izbrane 
 implementacije primerjale še na praznem sudokuju ter na 5-ih rešljivih različnih težavnosti (enakih, kot se nahajajo v datot. *sudokuji*).)
 Med izvajanjem bo program izpisoval pretekel čas za posamezne klice algoritmov.
@@ -101,6 +101,7 @@ Seveda lahko rešljivost sudokuja (imenujmo ga MOJSUDOKU) preverimo tudi ročno:
 
 Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imajo zopet obliko trojic i,j,k, ki predstavljajo trditev, da v rešenem sudokuju na mesto v i-ti vrstici in j-tem stolpcu spada število k.
 
+Kot že omenjeno, s pomočjo preverjanj rešljivosti sudokujev primerjamo tudi čas delovanja 'različnih' (po št. čistih pojavitev) dpll-jev. 
 
 * POVEZANOST GRAFA: je :toilet:.
 
