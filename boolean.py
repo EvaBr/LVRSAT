@@ -17,13 +17,13 @@ class T():
         return True
 
     def poenostavi(self):
-        return self
+        return T()
 
     def nnf(self, negiramo=False):
         if negiramo:
             return F()
         else:
-            return self
+            return T()
 
     def cnf(self):
             return Cnf([])
@@ -46,13 +46,13 @@ class F():
         return False
 
     def poenostavi(self):
-        return self
+        return F()
 
     def nnf(self, negiramo=False):
         if negiramo:
-            return F()
+            return T()
         else:
-            return self
+            return F()
 
     def cnf(self):
             return Cnf([Stavek([])])
@@ -78,14 +78,14 @@ class Spr():
         return slo[self.ime]
 
     def poenostavi(self):
-        return self
+        return Spr(self.ime)
     
     def nnf(self, negiramo=False):
         """Vrne nnf obliko objekta self."""
         if negiramo:
-            return Neg(self)
+            return Neg(Spr(self.ime))
         else:
-            return self
+            return Spr(self.ime)
 
     def cnf(self):
         """Vrne CNF obliko objekta self."""
@@ -113,37 +113,36 @@ class Neg():
         return not self.izr.vrednost(slo)
 
     def poenostavi(self):
-        a = self.izr.poenostavi()
-        tip = type(a)
+        notr = self.izr.poenostavi()
+        tip = type(notr)
         if tip==T:
             return F()
         elif tip==F:
             return T()
         elif tip==Spr:
-            return Neg(a)
+            return Neg(notr)
         elif tip==Neg:
-            return a.izr
+            return notr.izr
         elif tip==In:
-            return Ali(*tuple(Neg(i) for i in a.sez)).poenostavi()
+            return Ali(*tuple(Neg(i) for i in notr.sez)).poenostavi()
         elif tip==Ali:
-            return In(*tuple(Neg(i) for i in a.sez)).poenostavi()
+            return In(*tuple(Neg(i) for i in notr.sez)).poenostavi()
         
     def nnf(self, negiramo=False):
-        a = self.izr.poenostavi()
-        tip = type(a)
+        notr = self.izr.poenostavi()
+        tip = type(notr)
         if tip==T:
             return F()
         elif tip==F:
             return T()
         elif tip==Spr:
-            return Neg(a)
+            return Neg(notr)
         elif tip==Neg:
-            return a.izr
+            return notr.izr
         elif tip==In:
-            return Ali(*tuple(Neg(i) for i in a.sez))
+            return Ali(*tuple(Neg(i) for i in notr.sez))
         elif tip==Ali:
-            return In(*tuple(Neg(i) for i in a.sez))
-        #return self.izr.nnf(negiramo = not negiramo)
+            return In(*tuple(Neg(i) for i in notr.sez))
 
     def cnf(self):
         if isinstance(self.izr, Spr):
@@ -160,7 +159,8 @@ class In():
         niz = ""
         for i in self.sez:
             niz += " ∧ " + repr(i)
-
+        if len(self.sez)==1:
+            return niz[3:]
         return "(" + niz[3:] + ")"
 
     def __eq__(self,other):
@@ -173,34 +173,48 @@ class In():
         return hash(repr(self))
 
     def vrednost(self,slo):
-        a = True
+        vr = True
         for i in self.sez:
-            a = a and i.vrednost(slo)
-            if a==False:
-                return a
-        return a
+            vr = vr and i.vrednost(slo)
+            if vr==False:
+                return False
+        return vr
 
     def poenostavi(self):
-        if len(self.sez)==0: return T()
-        elif len(self.sez)==1: return self.sez.pop().poenostavi()
+        if len(self.sez)==0: 
+            return T()
+        elif len(self.sez)==1: 
+            return self.sez.pop().poenostavi()
         slo = {}
         for i in self.sez:
-            i=i.poenostavi()
-            if type(i)==F: return F()
-            elif type(i)==T: pass
+            i = i.poenostavi()
+            if type(i)==F: 
+                return F()
+            elif type(i)==T: 
+                pass   
             elif type(i) in slo:
                 slo[type(i)].add(i)
             else:
                 slo[type(i)]={i}
 
-        #complementary law
+        #Znebimo se In-a v In-u:
+        if In in slo:
+            for j in slo[In]:
+                for i in j.sez:
+                    if type(i) in slo: 
+                        slo[type(i)].add(i)
+                    else: 
+                        slo[type(i)] = {i}
+            del slo[In]
+
+        #Complementary law:
         if Neg in slo:
             for i in slo[Neg]:
                 for j in slo.values():
                     if i.izr in j:
                         return F()
 
-        #absorp., common ident.
+        #Absorp., common ident.:
         if Ali in slo:
             menjave = {}
             for i in slo[Ali]:
@@ -211,22 +225,19 @@ class In():
                         elif Neg(k) in i.sez:
                             menjave[i] = set(i.sez)-{Neg(k)}
             slo[Ali]={(Ali(*tuple(menjave[i])) if menjave[i]!=0 else None )if i in menjave else i for i in slo[Ali]} - {None}
-        
-            
-        
-
-        if In in slo:
-            for j in slo[In]:
-                for i in j.sez:
-                    if type(i) in slo: slo[type(i)].add(i)
-                    else: slo[type(i)] = {i}
-      
-            del slo[In]
-        
+                    
         mn = set()
         for i in slo.values():
             mn |= i
-        return In(*tuple(mn))
+        konc = In(*tuple(mn))
+
+        if len(konc.sez)==0:
+            return T()
+        elif len(konc.sez)==1:
+            return konc.sez[0]
+        else:
+            return konc
+
 
     def nnf(self, negiramo=False):
         lst = [p.nnf(negiramo) for p in self.sez]
@@ -251,8 +262,10 @@ class Ali():
         niz = ""
         for i in self.sez:
             niz += " ∨ " + repr(i)
-
-        return "(" + niz[3:] + ")"
+        if len(self.sez)==1:
+            return niz[3:]
+        else:
+            return "(" + niz[3:] + ")"
 
     def __eq__(self,other):
         if type(other)==Ali:
@@ -264,55 +277,61 @@ class Ali():
         return hash(repr(self))
 
     def vrednost(self,slo):
-        a = False
+        vr = False
         for i in self.sez:
-            a = a or i.vrednost(slo)
-            if a==True:
-                return a
-        return a
+            vr = vr or i.vrednost(slo)
+            if vr==True:
+                return True
+        return vr
 
     def poenostavi(self):
-        if len(self.sez)==0: return F()
-        elif len(self.sez)==1: return self.sez.pop().poenostavi()
+        if len(self.sez)==0: 
+            return F()
+        elif len(self.sez)==1: 
+            return self.sez.pop().poenostavi()
         slo = {}
         for i in self.sez:
             i = i.poenostavi()
-            if type(i)==T: return T()
-            elif type(i)==F: pass
+            if type(i)==T: 
+                return T()
+            elif type(i)==F: 
+                pass
             elif type(i) in slo:
                 slo[type(i)].add(i)
             else:
                 slo[type(i)] = {i}
+
+        #Znebimo se Ali-ja v Ali-ju:
+        if Ali in slo:
+            for j in slo[Ali]:
+                for i in j.sez:
+                    if type(i) in slo: 
+                        slo[type(i)].add(i)
+                    else: 
+                        slo[type(i)] = {i}
+            del slo[Ali]
         
-        #complementary law
+        #Complementary law:
         if Neg in slo:
             for i in slo[Neg]:
                 for j in slo.values():
                     if i.izr in j:
                         return T()
 
-        #absorpcija in common identities in distributivnost
+        #Absorpcija, common ids in distributivnost:
         if In in slo:
             menjave = {}
             for i in slo[In]:
                 for j in slo.values():
                     for k in j:
-                        if k in i.sez: #absorpcija
+                        if k in i.sez:
                             menjave[i] = 0
-                        elif Neg(k) in i.sez: #common id
+                        elif Neg(k) in i.sez:
                             menjave[i] = set(i.sez)-{Neg(k)}
-            slo[In] = {(In(*tuple(menjave[i])) if menjave[i] != 0 else None) if i in menjave else i for i in slo[In]} - {None}
-                
-
+            slo[In] = {(In(*tuple(menjave[i])) if menjave[i]!=0 else None) if i in menjave else i for i in slo[In]} - {None}
+        
+        #DODAJ DISTRIBUTIVNOST!
        
-        if Ali in slo:
-            for j in slo[Ali]:
-                for i in j.sez:
-                    if type(i) in slo: slo[type(i)].add(i)
-                    else: slo[type(i)] = {i}
-      
-            del slo[Ali]
-
         mn = set()
         for i in slo.values():
             mn |= i

@@ -1,32 +1,53 @@
 ################################################################################
 #                                   Hadamard                                   #
-#                                   spremeni                                   #
-#  Funkcija sprejme seznam trojic in vrne formulo za sudoku.                   #
 #                                                                              #
-#  Primer uporabe: sudoku([(1,1,9),(1,2,2),(3,4,5)])                           #
+#  Funkcija sprejme naravno število n in vrne logično formulo za SAT problem   #
+#  (ali obstaja Hadamardova matrika n x n).                                    #
+#									       #
+#  Primer uporabe: hadamard(5)                                                 #
 #                                                                              #
-#  V vsaki trojici prvi števili predstavlja indeksa vrstice in stolpca,        #
-#    tretje pa število v tem polju. Vsako število mora biti iz množice         #
-#    {1,2,3,4,5,6,7,8,9}                                                       #
-#                                                                              #
-#  Funkcija ne preverja ali so v seznamu, ki ga prejme kot parameter, števila  #
-#    med 1 in 9.                                                               #
 #                                                                              #
 ################################################################################
 
 from boolean import *
 
-#HADAMARD
-#Xij elementi matrike
-##def hadamard(n):
-##    if n%2==1:
-##        return F()
-##    for j in range (2,n): #stolpec1
-##        for i in range (1,j): #stolpec2
-##            vektor = {}
-##            for st in range(1,n):
-##                vektor["prod{0}".format(st)] = In(Spr("X{0}{1}".format(i,st)), Spr("X{0}{1}".format(j,st))) #V vektorju maš pol skalarni prod. stolpcev i in j
-##            Spr("C1,0")= Neg(vektor["prod1"])
-##            Spr("C{0},{1}".format(n, n/2)) = Ali(In(Spr("C{0}{1}".format(n-1, n/2)), Neg(vektor["prod{0}".format(n)])),In(vektor["prod{0}".format(n)],Spr("C{0}{1}".format(n-1, n/2-1))))
-##            if Spr("C{0}{1}".format(n,n/2))==F():
-##                return F()
+
+def s(m,k):
+    niz = "X({0}, {1})".format(m, k)
+    return Spr(niz)
+
+def n(m,k):
+    niz = "X({0}, {1})".format(m, k)
+    return Neg(Spr(niz))
+
+
+#Xij elementi matrike; Xij == T(), ce je na tem polju 1.
+def hadamard(N):
+
+    def prod(i, j, a=N, b=N//2):
+        #Vrne T(), ce je skal prod i-tega in j-tega stolpca enak 0.
+        if a<b:
+            return F()
+        elif a==1 and b==0:
+            return Ali(n(1,i), n(1,j))
+        elif a==1 and b==1: 
+            return In(s(1,i), s(1,j))
+        elif b==0: #and a>1
+            return In(prod(i, j, a-1, 0), Ali(n(a,i), n(a,j)))
+        else: #a>=b, b>0,  
+            return Ali(In(prod(i, j, a-1, b-1), s(a,i), s(a,j)), In(prod(i, j, a-1, b), Ali(n(a,i), n(a,j))))
+    #if N%2==1:
+    #    return F()
+    #else:
+    #    return In(*tuple(prod(i, j) for i in range(2, N+1) for j in range(1, i)))
+    #
+    # Bi rekla, da je tole sehr kurz und elegantisch :P, aber Piton pravi "RuntimeError: maximum recursion depth exceeded". 
+    #
+    # Dejmo bit torej malo bolj dinamicni in prostorsko potratni:
+    
+    #prod = [Ali(n(1,i), n(1,j)), In(s(1,i), s(1,j))]+[0]*
+
+    if N%2==1:
+        return F()
+    else:
+        return In(*tuple(prod(i, j) for i in range(2, N+1) for j in range(1, i)))
