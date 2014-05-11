@@ -14,7 +14,7 @@ Projekt je razdeljen na dva dela:
 
 :one: SAT solver (prevedba logičnega izraza na [CNF](http://en.wikipedia.org/wiki/Conjunctive_normal_form) obliko, implementacija [DPLL](http://en.wikipedia.org/wiki/DPLL_algorithm) algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri* (dodatno še *dpll_ena_cista_pojavitev*, *dpll_brez*, ter *primerjavaCasov*). 
 
-:two: Prevedba nekaj znanih problemov na SAT, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, ter *resljivostSudoku*.
+:two: Prevedba nekaj znanih problemov na SAT, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, *resljivostSudoku* ter *sudokuji*.
 
 
 ===
@@ -92,7 +92,7 @@ Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
 Pravilnost implementacije dpllja se lahko na teh dobljenih "sudoku SAT formulah" preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
 
-In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje, zato ne priporočamo zagona! ).
+In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj bi naj preverilo le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje, zato ne priporočamo zagona! ).
 
 Drugi način testiranja, ki pa celo že deluje ( :grey_exclamation: ), je možno izvesti preko zagona skripte *sudokuji*. Program bo izvedel testiranje na 10 random generiranih sudokujih, ter na praznem in na petih rešljivih (povzetih z [interneta](http://www.websudoku.com/)), že podanih sudokujih.
 Glavna pomanjkljivost tega programa: vnašanje sudokujev ni možno v človeku prijazni, pregledni obliki.
