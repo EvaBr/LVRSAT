@@ -12,9 +12,9 @@
 
 Projekt je razdeljen na dva dela:
 
-:one: SAT solver (implementacija dpll algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri* (dodatno še *dpll_ena_cista_pojavitev*, *dpll_brez*, ter *primerjavaCasov*). 
+:one: SAT solver (prevedba logičnega izraza na [CNF](http://en.wikipedia.org/wiki/Conjunctive_normal_form) obliko, implementacija [DPLL](http://en.wikipedia.org/wiki/DPLL_algorithm) algoritma), datoteke: *boolean*, *cnf*, *dpll* in *testniprimeri* (dodatno še *dpll_ena_cista_pojavitev*, *dpll_brez*, ter *primerjavaCasov*). 
 
-:two: Prevedba nekaj znanih problemov na SAT obliko, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, ter *resljivostSudoku*.
+:two: Prevedba nekaj znanih problemov na SAT, datoteke: *barvanje*, *grafi*, *hadamard*, *sudoku*, *primeri*, ter *resljivostSudoku*.
 
 
 ===
@@ -25,8 +25,8 @@ Glavna funkcija dpll, ki izvede algoritem, sprejme formulo v cnf obliki. Vsebuje
 
 Delovanje vsega trojega se lahko do neke mere preveri s pomočjo osnovnih primerov v fajlu *testniprimeri* (potreben je le zagon skripte).
 
-Uporaba našega dpllja: 
-Kličemo ga (pri čemer najprej importamo datoteko *dpll*) takole: `R = dpll(formula)`, kjer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
+Uporaba našega dpll-ja: 
+ Kličemo ga (pri čemer moramo seveda najprej importati datoteko *dpll*) takole: `R = dpll(formula)`, kjer klic vrne R=0, če formula ni zadovoljiva, ter npr. R={s1: T(), s2: F(), ...} (slovar vrednosti, ki jih morajo zavzeti spremenljivke za zadovoljitev formule), če je. Formula, ki jo podamo, mora biti v cnf obliki. 
 
 V tem vrnjenem slovarju so vrednosti tistih spremenljivk, ki se v formuli pojavijo a so nepomembne oziroma njihova vrednost na veljavo formule nima vpliva, nastavljene na vrednost T(), kar predstavlja True. (To zveni bolj prijetno in optimistično, kot pa če bi vse nastavili na False... Bi pa jih sicer BP lahko.)
 
@@ -52,8 +52,8 @@ Poglejmo še klicanje pomembnejših funkcij in objektov po datotekah.
   * Konjunkcija: `In(x1, x2, ...)`, kjer so xi tipa Spr.
   * Negacija: `Neg(x)`, kjer x tipa Spr.
   * True: `T()`, False: `F()`.
-  * Poenostavljanje formul: `izraz.poenostavi()`
-  * Računanje CNF oblike: `izraz.cnf()` (Vrne formulo tipa Cnf.)
+  * Poenostavljanje formul: `izraz.poenostavi()`.
+  * Računanje CNF oblike: `izraz.cnf()`. (Vrne formulo tipa Cnf.)
 2. dpll:
   * Preverjanje rešljivosti SAT problema: `dpll(izraz)`, kjer je izraz tipa Cnf. Klic bo, kot že rečeno, vrnil 0, če problem ni rešljiv, ter ustrezen slovar, če je.
 
@@ -75,7 +75,7 @@ Primer uporabe: `formula = barvanje(5, [(1,3), (2,3), (4,5), (2,4), (2,5)])`
 
 Povsem analogno deluje tudi funkcija **kbarvanje(K, n, E)**, ki pa ji moramo dodatno (kot prvi argument) podati še (naravno) število barv K.
 
-Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V njej je zapisanih nekaj definicij grafov, na katerih se kliče glavna funkcija **kbarvanje**. Za osnovno testiranje bo torej poskrbel že sam zagon datoteke **grafi**, v kolikor želiš preveriti delovanje na kakšnem povsem drugačnem grafu, pa lahko (po importanju modulov *dpll* in *barvanje*) na njem najprej pokličeš **kbarvanje** (in dobljeno pretvoriš v cnf obliko), nato pa še **dpll** : `rezultat = dpll(kbarvanje(K,n,E).cnf())`.
+Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V njej je zapisanih nekaj definicij grafov, na katerih se kliče glavna funkcija **kbarvanje**. Za osnovno testiranje bo torej poskrbel že sam zagon datoteke **grafi**, v kolikor želiš preveriti delovanje na kakšnem povsem drugačnem grafu, pa lahko (po importanju modulov *dpll* in *barvanje*) na njem najprej pokličeš **kbarvanje** (in dobljeno pretvoriš v cnf obliko), nato pa še **dpll**. Torej takole: `rezultat = dpll(kbarvanje(K,n,E).cnf())`.
 
 
 * HADAMARD:
@@ -92,16 +92,16 @@ Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
 Pravilnost implementacije dpllja se lahko na teh dobljenih "sudoku SAT formulah" preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
 
-In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje zares, zato ne priporočamo zagona! ).
+In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj vedno preveri le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje, zato ne priporočamo zagona! ).
 
-Drugi način testiranja, ki pa celo že deluje ( :grey_exclamation: ), je možno izvesti preko zagona skripte *sudokuji*. Program bo izvedel testiranje na 10 random generiranih sudokujih, ter na praznem in na petih rešljivih (povzetih z interneta), že podanih sudokujih.
+Drugi način testiranja, ki pa celo že deluje ( :grey_exclamation: ), je možno izvesti preko zagona skripte *sudokuji*. Program bo izvedel testiranje na 10 random generiranih sudokujih, ter na praznem in na petih rešljivih (povzetih z [interneta](http://www.websudoku.com/)), že podanih sudokujih.
 Glavna pomanjkljivost tega programa: vnašanje sudokujev ni možno v človeku prijazni, pregledni obliki.
 
-Seveda lahko rešljivost sudokuja (imenujmo ga MOJSUDOKU) preverimo tudi ročno: `dpll(sudoku(MOJSUDOKU).cnf())`. Kot je razloženo že v opisu *dpll*-ja, v primeru nerešljivosti ta klic vrne 0, sicer pa slovar.
+Seveda lahko rešljivost sudokuja (imenujmo ga MOJSUDOKU) preveriš tudi ročno: `dpll(sudoku(MOJSUDOKU).cnf())`. Kot je razloženo že v opisu *dpll*-ja, v primeru nerešljivosti ta klic vrne 0, sicer pa slovar.
 
 Spremenljivke v slovarju, ki ga dobimo po klicu dpll-ja na nekem sudoku-ju, imajo zopet obliko trojic i,j,k, ki predstavljajo trditev, da v rešenem sudokuju na mesto v i-ti vrstici in j-tem stolpcu spada število k.
 
-Kot že omenjeno, s pomočjo preverjanj rešljivosti sudokujev primerjamo tudi čas delovanja 'različnih' (po št. čistih pojavitev) dpll-jev. 
+Kot že omenjeno, s pomočjo preverjanj rešljivosti sudokujev primerjamo tudi čas delovanja 'različnih' (po št. čistih pojavitev) dpll-jev. (To je opisano zgoraj, v rubriki dodatno.)
 
 * POVEZANOST GRAFA: je :toilet:.
 
@@ -114,6 +114,6 @@ Kot že omenjeno, s pomočjo preverjanj rešljivosti sudokujev primerjamo tudi �
 
 Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa *sudokuji*, program *resljivostSudoku* pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma: :soon: .
 
-Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko (okoli 10 sekund).
+Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko (vsaj 10 sekund).
 Ob zagonu programa *primerjavaCasov* je mozno opaziti tudi, da v splošnem naša implementacija čiste pojavitve v funkciji **dpll** zadev sploh ne pohitri. Najhitreje deluje tista implementacija, kjer se čista pojavitev sicer preverja, a le takoj na začetku, ob klicu funkcije 
 (to pa je iplementacija s funkcijo **dpll_brez_ciste** v skriptki *dpll_ena_cista_pojavitev*).
