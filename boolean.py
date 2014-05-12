@@ -247,10 +247,14 @@ class In():
             return In(lst)
 
     def cnf(self):
+        literaliStavkov = []
         stavki = []
         for p in self.sez:
-            dodamo = [i for i in p.cnf().stavki if i not in stavki]
-            stavki.extend(dodamo)
+            for i in p.cnf().stavki:
+                dodaj = set(i.literali) 
+                if dodaj not in literaliStavkov:
+                    literaliStavkov.append(dodaj)
+                    stavki.append(Stavek(list(dodaj)))
         return Cnf(stavki)
     
 ##########################################################################
@@ -352,13 +356,30 @@ class Ali():
         else:
             # Razbijemo disjunkcijo na dve podformuli in izracunamo CNF
             stavki = []
+            #Slo bi, ce naprej namesto self uporabljamo:
+            # selfie = self.poenostavi(). Ampak poenostavi() je vrlo langsam.
+            #Zato raje enostavno uvedimo stevcek:
+            stevcek = 0
+            for i in self.sez[1:]:
+                if stevcek==0: #i==self.sez[1]:
+                    stevcek = 1
+                    pom = i
+                else:
+                    pom = Ali(pom,i)
+
+            literaliStavkov = []
             for s1 in self.sez[0].cnf().stavki:
-                for i in self.sez[1:]:
-                    if i==self.sez[1]:
-                        pom = i
-                    else:
-                        pom = Ali(pom,i)
                 for s2 in pom.cnf().stavki:
-                    stavki.append(Stavek(s1.literali + s2.literali))
-                    
+                    set1 = set(s1.literali) #Pomagamo si s SET-i, da se literali v stavku ne ponovijo.
+                    set2 = set1|set(s2.literali)
+                    if set2 not in literaliStavkov:
+                        stavki.append(Stavek(list(set2)))
+                        literaliStavkov.append(set2) #Tu si zapomnimo vsebine vseh stavkov, zato da jih ne ponavljamo.
+
+            #OPP: da ne bi porabili tolk prostora z 'literaliStavkov' bi lahko
+            # stavke najprej sortirali po velikosti. Tako bi si zmeraj blo treba
+            # zapomnit le literale enako dolgih stavkov. Ampak to utegne biti
+            # casovno potratnejse, saj sort tudi nekaj porabi; sploh v primeru,
+            # ko bi v dolgi formuli imeli same enako dolge stavke...
+
             return Cnf(stavki)

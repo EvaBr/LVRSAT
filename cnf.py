@@ -23,6 +23,14 @@ class Lit():
     def __repr__(self):
         return self.ime
 
+    def __eq__(self,other):
+        if type(other)==Lit:
+            return self.ime==other.ime
+        else:
+            return False
+    def __hash__(self):
+        return hash(repr(self))
+
 class Til():
     """Negiran atom."""
 
@@ -30,4 +38,13 @@ class Til():
         self.ime = x
 
     def __repr__(self):
-        return "~"+self.ime
+        return "~" + self.ime
+
+    def __eq__(self,other):
+        if type(other)==Til:
+            return self.ime==other.ime
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(repr(self))
