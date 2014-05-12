@@ -16,6 +16,7 @@ x=Spr('x')
 y=Spr('y')
 z=Spr('z')
 w=Spr('w')
+q=Spr('q')
 
 primer1 = Ali(x, y, z)
 print('===== Primer 1 =====')
@@ -147,7 +148,6 @@ print (primer21)
 print (primer21.cnf())
 print (dpll(primer21.cnf()))
 
-
 primer22 = In(Neg(x), y, Ali(x, Neg(z), In(z, x, Neg(y))))
 print('===== Primer 22 =====')
 print (primer22)
@@ -159,3 +159,16 @@ print('===== Primer 23 =====')
 print (primer23)
 print (primer23.cnf())
 print (dpll(primer23.cnf()))
+
+#Primera, ki pokazeta, da se literali oz. stavki ne podvajajo:
+primer24 = Ali(Ali(x, y), z, In(w, q), y, z)
+print('===== Primer 24 =====')
+print (primer24)
+print (primer24.cnf())
+print (dpll(primer24.cnf()))
+
+primer25 = Ali(Ali(x, y), In(w, w), z, Ali(w, q))
+print('===== Primer 25 =====')
+print (primer25)
+print (primer25.cnf())
+print (dpll(primer25.cnf()))
