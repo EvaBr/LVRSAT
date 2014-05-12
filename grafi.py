@@ -27,6 +27,8 @@ def pot(n):
 
 def cikel(n):
     sez = []
+    if n==1:
+        return sez
     for i in range (1,n):
         sez.append((i, i+1))
     sez.append((n, 1))
@@ -71,7 +73,7 @@ def HumanFriendlyVersion(dplldict):
     Ok = {}
     for spr in dplldict:
         if dplldict[spr]==T():
-            [oglisce, barva] = spr.ime.split(".")
+            [oglisce, barva] = spr.split(".")
             [oglisce, barva] = [oglisce[1:], int(barva)]
             Ok["oglisce " + oglisce] = barva
     return Ok
