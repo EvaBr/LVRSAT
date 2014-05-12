@@ -17,22 +17,23 @@ if not (D=="n" and D1=="n" and DB=="n"):
 if not (D=="n" and D1=="n" and DB=="n"):
 	print("\n Prazen sudoku:")
 	print("="*25)
-if D=="y":
 	CNF = sudoku([]).cnf()
+
+if D=="y":
+	kopija = Cnf([Stavek([i for i in s.literali]) for s in CNF.stavki])
 	before1 = clock()
-	rez1 = dpll(CNF)
+	rez1 = dpll(kopija)
 	after1 = clock()
 	print("Dpll z večkratno čisto pojavitvijo potrebuje {0} sec.".format(after1-before1))
 
 if D1=="y":
-	CNF = sudoku([]).cnf()
+	kopija = Cnf([Stavek([i for i in s.literali]) for s in CNF.stavki])
 	before2 = clock()
-	rez2 = dpll_brez_ciste(CNF)
+	rez2 = dpll_brez_ciste(kopija)
 	after2 = clock()
 	print("Dpll z enkratno čisto pojavitvijo potrebuje {0} sec.".format(after2-before2))
 
 if DB=="y":
-	CNF = sudoku([]).cnf()
 	before3 = clock()
 	rez3 = dpll_osnoven(CNF)
 	after3 = clock()
@@ -57,23 +58,23 @@ for i in range(L): #koliko primerov bomo naredili
 	print("="*25)
 	print("Podana zasedena polja na začetku: ")
 	print(polja, "\n")
+	CNF = sudoku(polja).cnf()
 
 	if D=="y":
-		CNF = sudoku(polja).cnf()
+		kopija = Cnf([Stavek([i for i in s.literali]) for s in CNF.stavki])
 		before1 = clock()
-		rez = dpll(CNF)
+		rez = dpll(kopija)
 		after1 = clock()
 		print("Dpll z večkratno čisto pojavitvijo potrebuje {0} sec.".format(after1-before1))
 
 	if D1=="y":
-		CNF = sudoku(polja).cnf()
+		kopija = Cnf([Stavek([i for i in s.literali]) for s in CNF.stavki])
 		before2 = clock()
-		rez = dpll_brez_ciste(CNF)
+		rez = dpll_brez_ciste(kopija)
 		after2 = clock()
 		print("Dpll z enkratno čisto pojavitvijo potrebuje {0} sec.".format(after2-before2))
 
 	if DB=="y":
-		CNF = sudoku(polja).cnf()
 		before3 = clock()
 		rez = dpll_osnoven(CNF)
 		after3 = clock()
@@ -111,23 +112,23 @@ if not (D=="n" and D1=="n" and DB=="n"):
 	for i in range(5):
 		print("\n \n Sudoku {0}: ".format(i+L+1), sudi[i])
 		print("="*30)
+		CNF = sud[i].cnf()
 
 		if D=="y":
-			CNF = sud[i].cnf()
+			kopija = Cnf([Stavek([i for i in s.literali]) for s in CNF.stavki])
 			bef1 = clock()
-			rez1 = dpll(CNF)
+			rez1 = dpll(kopija)
 			aft1 = clock()
 			print("Dpll z večkratno čisto pojavitvijo potrebuje {0} sec.".format(aft1-bef1))
 
 		if D1=="y":
-			CNF = sud[i].cnf()
+			kopija = Cnf([Stavek([i for i in s.literali]) for s in CNF.stavki])
 			bef2 = clock()
-			rez2 = dpll_brez_ciste(CNF)
+			rez2 = dpll_brez_ciste(kopija)
 			aft2 = clock()
 			print("Dpll z enkratno čisto pojavitvijo potrebuje {0} sec. ".format(aft2-bef2))
 
 		if DB=="y":
-			CNF = sud[i].cnf()
 			bef3 = clock()
 			rez3 = dpll_osnoven(CNF)
 			aft3 = clock()
