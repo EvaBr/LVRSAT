@@ -90,7 +90,7 @@ Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verja
 
 Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
-Pravilnost implementacije dpllja se lahko na teh dobljenih "sudoku SAT formulah" preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
+Pravilnost implementacije oziroma primer uporabe dpllja se lahko na teh dobljenih "sudoku SAT formulah" preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
 
 In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj bi naj preverilo le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje, zato ne priporočamo zagona! ).
 
@@ -112,8 +112,8 @@ Kot že omenjeno, s pomočjo preverjanj rešljivosti sudokujev primerjamo tudi �
 
 ###### Neodpravljene težave in dodatne informacije o delovanju programov:
 
-Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov za preverjanje njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa *sudokuji*, program *resljivostSudoku* pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma: :soon: .
+Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov, ki naj bi služil kot primer za prikaz njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa *sudokuji*, program *resljivostSudoku* pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma: :soon: .
 
 Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko (vsaj 10 sekund).
-Ob zagonu programa *primerjavaCasov* je mozno opaziti tudi, da v splošnem naša implementacija čiste pojavitve v funkciji **dpll** zadev sploh ne pohitri. Najhitreje deluje tista implementacija, kjer se čista pojavitev sicer preverja, a le takoj na začetku, ob klicu funkcije 
+Ob zagonu programa *primerjavaCasov* je mozno opaziti tudi, da v splošnem naša implementacija čiste pojavitve v funkciji **dpll** zadev sploh ne pohitri. Najhitreje običajno deluje tista implementacija, kjer se čista pojavitev sicer preverja, a le takoj na začetku, ob klicu funkcije 
 (to pa je iplementacija s funkcijo **dpll_brez_ciste** v skriptki *dpll_ena_cista_pojavitev*).
