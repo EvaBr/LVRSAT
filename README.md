@@ -34,7 +34,7 @@ Za skeptike, ki bi želeli delovanje implementacije preveriti še na zapletenej�
 
 ***
 **DODATNO:**
-V dodatnih datotekah *dpll_brez* in *dpll_ena_cista_pojavitev* se nahajata zgolj informativni implementaciji algoritma brez oz. z eno čisto pojavitvijo;
+V dodatnih datotekah *dpll_brez* in *dpll_ena_cista_pojavitev* se nahajata zgolj informativni implementaciji algoritma brez oz. z eno čisto pojavitvijo:
 v *dpll_brez*, kjer ima glavna funkcija ime **dpll_osnoven**, ni nikakršnega preverjanja čiste pojavitve, v *dpll_ena_cista_pojavitev* pa je to dodano le na začetku, takoj ob klicu glavne funkcije te implementacije; **dpll_brez_ciste**. 
 Za primerjanje trajanja klicev vseh treh implementacij dpll-ja je dodan še programček *primerjavaCasov*, ki štopa čas izvajanja algoritmov na sudoku primerih (delovanje dpll na sudokujih je opisano malo nižje...);
  ob zagonu je možno izbrati, katere od implementacij želiš preverjati, ter na koliko random generiranih sudokujih. (V vsakem primeru se bodo izbrane 
@@ -75,13 +75,14 @@ Primer uporabe: `formula = barvanje(5, [(1,3), (2,3), (4,5), (2,4), (2,5)])`
 
 Povsem analogno deluje tudi funkcija **kbarvanje(K, n, E)**, ki pa ji moramo dodatno (kot prvi argument) podati še (naravno) število barv K.
 
-Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V njej je zapisanih nekaj definicij grafov, na katerih se kliče glavna funkcija **kbarvanje**. Za osnovno testiranje bo torej poskrbel že sam zagon datoteke **grafi**, v kolikor želiš preveriti delovanje na kakšnem povsem drugačnem grafu, pa lahko (po importanju modulov *dpll* in *barvanje*) na njem najprej pokličeš **kbarvanje** (in dobljeno pretvoriš v cnf obliko), nato pa še **dpll**. Torej takole: `rezultat = dpll(kbarvanje(K,n,E).cnf())`.
+Pravilnost spisanih programov se lahko preveri s pomočjo datoteke *grafi*. V njej je zapisanih nekaj definicij grafov, na katerih se kliče glavna funkcija **kbarvanje**. Za osnovno testiranje bo torej poskrbel že sam zagon datoteke *grafi*, v kolikor želiš preveriti delovanje na kakšnem povsem drugačnem grafu, pa lahko (po importanju modulov *dpll* in *barvanje*) na njem najprej pokličeš **kbarvanje** (in dobljeno pretvoriš v cnf obliko), nato pa še **dpll**. Torej takole: `rezultat = dpll(kbarvanje(K,n,E).cnf())`.
 
 
 * HADAMARD:
 
-Funkciji **hadamard(n)**, ki se (oziroma se bo nekoč) nahaja v istoimenski datoteki, moramo podati le velikost kvadratne matrike n, da dobimo SAT obliko zapisa problema. Za program se je javila :octopus:, tako da bo najbrž trajalo. Je cepljena proti hitrosti. Nekoč kasneje pa bo seveda dodano tudi preverjanje.
+Funkcijama **hadamard(n)** in **hadamard2(n)**, ki se nahajata v istoimenski datoteki, moramo podati le velikost kvadratne matrike n, da dobimo SAT obliko zapisa problema. Prva deluje rekurzivno in je zato precej počasnejša od druge, ki ne vsebuje rekurzije. (Npr. klic hadamard(12) se izvede v 25sec, hadamard2(12) pa v 0.3sec.)
 
+Za testiranje pravilnosti spisanih funkcij oziroma prikaz uporabe DPLL-ja na dobljenih formulah poskrbi programček *hadamardki*, ki ga je potrebno le zagnati. Zaradi porabe časa je narejen tako, da uporablja nerekurzivno funkcijo **hadamard2**. Vseeno pa (zaradi potratnega spreminjanja v cnf obliko) ne priporočamo preizkušanja na velikostih n>6...
 
 * SUDOKU:
 
@@ -90,12 +91,12 @@ Funkcija ne preverja, ali so v zasedenih poljih res vrednosti med 1 in 9. (Verja
 
 Primer uporabe: `formula = sudoku([(1,1,9),(1,2,2),(3,4,5)])`
 
-Pravilnost implementacije oziroma primer uporabe dpllja se lahko na teh dobljenih "sudoku SAT formulah" preverja (oz. se bo nekoč v bližnji prihodnosti lahko preverjala) na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
+Pravilnost implementacije oziroma primer uporabe dpllja se lahko na teh dobljenih "sudoku SAT formulah" preverja na dva načina: s pomočjo datotek *primeri* in *resljivostSudoku*, ali pa s programom *sudokuji*. 
 
-In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje okorno, saj bi naj preverilo le tri oz. vse tri sudokuje, ki so napisani v njej, dodajanje novih za delovanje programa ni dovoljeno. Pravtako ima težave z izpisom rešitev v človeku prijazni obliki. Stvar torej še ne deluje, zato ne priporočamo zagona! ).
+In sicer je za prvi način potrebno v katerega izmed sudokujev, ki so zapisani v datoteki *primeri* (.txt), vstaviti željena zasedena polja, nato pa zagnati program *resljivostSudoku* (Zaenkrat je to testiranje malce okorno, saj preveri le tri oz. natanko tiste tri sudokuje, ki so napisani v *primeri*-h, dodajanje novih ali spreminjanje oblike zapisa pa zaradi načina delovanja programa ni dovoljeno).
 
-Drugi način testiranja, ki pa celo že deluje ( :grey_exclamation: ), je možno izvesti preko zagona skripte *sudokuji*. Program bo izvedel testiranje na 10 random generiranih sudokujih, ter na praznem in na petih rešljivih (povzetih z [interneta](http://www.websudoku.com/)), že podanih sudokujih.
-Glavna pomanjkljivost tega programa: vnašanje sudokujev ni možno v človeku prijazni, pregledni obliki.
+Drugi način testiranja, ki pa že od začetka deluje ( :grey_exclamation: ) in je dosti zgovornejši, pa je možno izvesti preko zagona skripte *sudokuji*. Program bo izvedel testiranje na 10 random generiranih sudokujih, ter na praznem in na petih rešljivih (povzetih z [interneta](http://www.websudoku.com/)), že podanih sudokujih.
+Glavna pomanjkljivost tega programa: vnašanje sudokujev ni možno v človeku prijazni, pregledni obliki (kot pri preizkušanju z *resljivostSudoku*).
 
 Seveda lahko rešljivost sudokuja (imenujmo ga MOJSUDOKU) preveriš tudi ročno: `dpll(sudoku(MOJSUDOKU).cnf())`. Kot je razloženo že v opisu *dpll*-ja, v primeru nerešljivosti ta klic vrne 0, sicer pa slovar.
 
@@ -112,8 +113,11 @@ Kot že omenjeno, s pomočjo preverjanj rešljivosti sudokujev primerjamo tudi �
 
 ###### Neodpravljene težave in dodatne informacije o delovanju programov:
 
-Dpll deluje, preverjanje na grafih tudi, medtem ko eden izmed programov, ki naj bi služil kot primer za prikaz njegovega delovanja preko rešljivosti sudokujev ni popolnoma končan. Mogoče je ročno klicanje dpll-ja na nekem sudokuju: `dpll(sudoku(NEK SUDOKU).cnf())`, ali preverjanje s pomočjo zagona programa *sudokuji*, program *resljivostSudoku* pa žal potrebuje še kar nekaj popravkov. Končan bo predvidoma: :soon: .
+Dpll deluje kar hitro, preverjanje oziroma izvedba na grafih, sudokujih in Hadamardovih matrikah tudi, le izvedba pretvorbe na CNF je zel.
+o počasna, zaradi česar je preverjanje na Had. matrikah skorajda nesmiselno.
 
-Hitrost: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. Veliko časa vzame pretvorba formul na cnf obliko (vsaj 10 sekund).
+Izvedbo na formulah rešljivosti sudokujev za tiste, ki ne čutijo pretirane potrebe po (user friendly) vnašanju lastnih primerov, priporočamo s pomočjo programa *sudokuji*, saj ta prikaže več različnih (tako rešljivih kot nerešljivih) primerov.
+
+Hitrost izvedbe DPLL-ja: Na praznem sudokuju, kjer zaradi "neliteralnosti" vseh stavkov in "nevsebovanja čistih pojavitev" (na začetku) vzame največ časa, traja slabi dve minuti. (Veliko časa spet vzame pretvorba formul na CNF obliko - vsaj 10 sekund pri lažjih primerih.)
 Ob zagonu programa *primerjavaCasov* je mozno opaziti tudi, da v splošnem naša implementacija čiste pojavitve v funkciji **dpll** zadev sploh ne pohitri. Najhitreje običajno deluje tista implementacija, kjer se čista pojavitev sicer preverja, a le takoj na začetku, ob klicu funkcije 
-(to pa je iplementacija s funkcijo **dpll_brez_ciste** v skriptki *dpll_ena_cista_pojavitev*).
+(to pa je implementacija s funkcijo **dpll_brez_ciste** v skriptki *dpll_ena_cista_pojavitev*).
