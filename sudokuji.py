@@ -22,8 +22,8 @@ else:
 	print("\n\n")
 
 
-for i in range(10): #koliko primerov bomo naredili
-	P = randint(1, 81) #koliko bo danih polj
+for i in range(5): #koliko primerov bomo naredili
+	P = randint(1, 40) #koliko bo danih polj
 	polja = []
 	p = 0
 	while p<P:
